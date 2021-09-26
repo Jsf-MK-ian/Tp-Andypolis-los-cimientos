@@ -1,3 +1,5 @@
+//modifico desde linux con repo privada
+
 *Sería correcto que primero verifiques si existen o si se pudieron abrir, para evitar
 resultados inesperados. En ese caso podrías por ejemplo terminar el programa.
 Y para crearlos, hacelos manualmente.
