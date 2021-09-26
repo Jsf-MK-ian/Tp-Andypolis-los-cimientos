@@ -1,0 +1,23 @@
+*Sería correcto que primero verifiques si existen o si se pudieron abrir, para evitar
+resultados inesperados. En ese caso podrías por ejemplo terminar el programa.
+Y para crearlos, hacelos manualmente.
+
+*Buenas, seria mejor que retornen un error y desde donde sea que llamen la función hagan 
+algo según el retorno que reciban para poder informar bien al usuario que ocurrió.
+
+*4. Se puede usar memoria dinámica a la hora de leer los archivos ya que no al no saber 
+cuantos materiales o edificios hay en el archivo se pueden ir redimensionando los vectores 
+hasta que tengas todos los materiales/edificios que hay en el archivo. (editado) 
+
+*no hay un limite ni para materiales ni para edificios por lo que no se 
+sabe cuantas líneas puede tener cada archivo y para saber cuantos hay 
+deberán leer el archivo respectivo hasta el final
+
+*Buenas, por ahora la idea seria que en caso de que no exista el edificio que pide le 
+informes que su búsqueda no coincide con ningún edificio existente pero no lo va a poder 
+crear.
+
+*No te preocupes no hay repetidos pero si puede ser que haya por ejemplo oro u otro 
+material. Es decir, no sabes cuantos materiales hay pero sabes que los que existan 
+aparecen una sola vez.
+
