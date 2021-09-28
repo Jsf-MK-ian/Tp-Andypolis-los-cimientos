@@ -182,6 +182,15 @@ void construir_edificio(Lista_edificios *lista_edificios, Lista_materiales *list
 };
 
 
+void listar_todos_edificios(Lista_edificios *lista_edificios){
+    cout<<"NOMBRE EDIFICIO\t"<<"CANTIDAD CONSTRUIDOS\t"<<"MAX CANTIDAD PERMITIDA"<<endl;
+    for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
+        cout<<lista_edificios -> edificios[i] -> nombre_edificio <<" \t\t";
+        cout<<lista_edificios -> edificios[i] -> cantidad_construidos << " \t\t";
+        cout<<lista_edificios -> edificios[i] -> max_cantidad_permitidos<<endl;
+    }
+}
+
 
 int main(){
 
@@ -192,7 +201,8 @@ int main(){
     cargar_edificios(lista_edificios);
 
     if (lista_materiales->cantidad_de_materiales != -1 && lista_materiales->cantidad_de_materiales != 0 &&  
-    lista_edificios -> cantidad_de_edificios !=-1 && lista_edificios -> cantidad_de_edificios !=0 ){ 
+    lista_edificios -> cantidad_de_edificios !=-1 && lista_edificios -> cantidad_de_edificios !=0 )
+    { 
     //Si se pudieron abrir (!= -1) y no estan vacios (!=0), muestro el menu
     
     cout<<"NOMBRE\t"<<"MATERIAL"<<endl;
@@ -201,13 +211,7 @@ int main(){
         cout<<lista_materiales -> materiales[i] -> cantidad_material<<endl;
     }
 
-    cout<<endl;
-    cout<<"NOMBRE EDIFICIO\t"<<"CANT CONSTRUIDO\t"<<"MAX CANT PERMITIDA"<<endl;
-    for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
-        cout<<lista_edificios -> edificios[i] -> nombre_edificio <<" \t\t";
-        cout<<lista_edificios -> edificios[i] -> cantidad_construidos << " \t\t";
-        cout<<lista_edificios -> edificios[i] -> max_cantidad_permitidos<<endl;
-    }
+    listar_todos_edificios(lista_edificios);
     
     }
 
