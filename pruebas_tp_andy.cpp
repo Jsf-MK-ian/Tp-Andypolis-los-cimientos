@@ -155,6 +155,34 @@ void cargar_materiales(Lista_materiales* lista_materiales){
 }
 
 
+//Precondiciones: Recibe el objeto "lista_edificios" con los edificios disponibles a elegir
+//Postcondiciones: Devuelve el string "edificio_a_construir"
+string obtener_nombre_edificio(Lista_edificios *lista_edificios){
+    
+}
+
+
+//Precondiciones: Recibe los objetos "lista_edificios" y "lista_materiales" con los edificios y 
+//materiales disponibles
+//Potscondiciones: Devueleve??
+void construir_edificio(Lista_edificios *lista_edificios, Lista_materiales *lista_materiales){
+    //Construir edificios por nombreSe deberá 
+    //verificar que exista el edificio, 
+    //se cuente con la cantidad de materiales necesaria para poder construir y 
+    //que no se haya superado el máximo de construcciones permitidas del mismo.
+    // Si no cumple dichas condicionesse le avisara porque no es posible construir el edificio pedido, 
+    //en caso contrario, se le deberá consultar al usuario si 
+    //desea o no construir el edificio.
+    
+    obtener_nombre_edificio()
+    
+    licitar_edificio()
+    
+
+};
+
+
+
 int main(){
 
     Lista_materiales*lista_materiales = new Lista_materiales;
@@ -182,6 +210,9 @@ int main(){
     }
     
     }
+
+    construir_edificio(lista_edificios, lista_materiales);
+
     //El sig chequeo de si los archivos se encuentran vacios evitan el sig mensaje de error:
     //free(): double free detected in tcache 2
     //Aborted (core dumped)
@@ -241,16 +272,6 @@ int main(){
 
 }
 
-// yacimiento 125 280 0 0 2
-// escuela 152 298 45 1 1
-// fabrica 100 100 258 0 4
-// aserradero 100 58 50 1 2
-
-
-// piedra 200
-// metal 250
-// madera 500
-// oro 130
 
 
     
