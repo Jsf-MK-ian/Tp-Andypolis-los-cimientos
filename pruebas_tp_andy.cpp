@@ -35,6 +35,30 @@ struct Lista_edificios{
 };
 
 
+/*
+PRE: recibe el string "texto" con el mensaje a mostrar por pantalla y los entero "ocpiones_maximas" 
+y "opciones_minimas" con el numero de maximas y minimas opciones que es posible elegir.
+
+POST: Devuelve el entero "opcion" con la opcion elegida por el usuario cumpliendose la condicion de
+que es valida
+*/
+int ingresar_opcion(string texto, int opciones_minimas, int opciones_maximas){
+    
+    cout<<texto;
+    
+    int opcion;
+    cin >> opcion;
+
+    bool es_opcion_valida = (opcion >= opciones_minimas && opcion <= opciones_maximas);
+    while(!es_opcion_valida){
+        cout << "por favor ingrese una opcion valida: ";
+        cin >> opcion;
+        es_opcion_valida = (opcion >= opciones_minimas && opcion <= opciones_maximas);
+    }
+    return opcion;
+}
+
+
 void agregar_edificio(Lista_edificios* lista_edificios, Edificio* edificio){
     int tope_viejo = lista_edificios -> cantidad_de_edificios;
 
@@ -155,6 +179,12 @@ void cargar_materiales(Lista_materiales* lista_materiales){
     }
 }
 
+
+/*
+PRE: Recibe el struct "lista_edificios" con todos los edificios
+
+POST: Muestra por pantalla el listado de edificios con su informacion relacionada respectiva
+*/
 void listar_todos_edificios(Lista_edificios *lista_edificios){
     cout<<"NOMBRE EDIFICIO\t"<<"CANTIDAD CONSTRUIDOS\t"<<"MAX CANTIDAD PERMITIDA"<<endl;
     for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
@@ -164,18 +194,18 @@ void listar_todos_edificios(Lista_edificios *lista_edificios){
     }
 }
 
-//Precondiciones: Recibe el objeto "lista_edificios" con los edificios disponibles a elegir
-//Postcondiciones: Devuelve el string "edificio_a_construir"
+//PRE: Recibe el struct "lista_edificios" con los edificios disponibles a elegir
+//POST: Devuelve el string "edificio_a_construir"
 string obtener_nombre_edificio(Lista_edificios *lista_edificios){
     listar_todos_edificios(lista_edificios);
     string edificio_a_construir;
-    cout<<"Indique el nombre del edifico que desea construir";
+    cout<<"Indique el nombre del edifico que desea construir: ";
     cin >> edificio_a_construir;
-
+    
     return edificio_a_construir;
 }
 
-//Precondiciones: Recibe el objeto "lista_edificios" con los edificios existentes
+//Precondiciones: Recibe el struct "lista_edificios" con los edificios existentes
 //Postcondiciones: Devuelve el booleano 'existe' con true si se encuentra entre los disponibles o
 //con false en caso contrario
 bool existe_edificio(Lista_edificios *lista_edificios, string edificio_a_construir){
@@ -204,6 +234,7 @@ int obtener_posicion_edificio(string edificio_a_construir, Lista_edificios* list
             encontrado = true;
             posicion = i;
         }
+        i++;
     }
     return posicion;
 }
@@ -232,9 +263,11 @@ bool alcanzan_materiales(Lista_materiales *lista_materiales,int cantidad_piedra_
     bool alcanza = true;
     int i = 0;
     while (alcanza && i < lista_materiales -> cantidad_de_materiales){
+        
         string material_a_chequear = lista_materiales -> materiales[i] ->nombre_material;
         int cantidad_disponible = lista_materiales -> materiales[i] -> cantidad_material;
-        //chequeo piedra
+        
+        
         if (material_a_chequear == "piedra"){
             chequear_material(cantidad_disponible, cantidad_piedra_nec, alcanza);
         }
@@ -250,20 +283,58 @@ bool alcanzan_materiales(Lista_materiales *lista_materiales,int cantidad_piedra_
 }
 
 
-
-
 //Precondiciones: Recibe el string el objeto "lista_edificios" con los edificios disponibles y el 
 //entero "posicion_edificio" con la posicion del edificio en la lista de edificios.
+//POST: 
 bool supera_max_cant(Lista_edificios *lista_edificios, int posicion_edificio){
     bool supera = false;
+    
+    cout<<"ESTOY AQUI"<<endl;
     int construidos = lista_edificios -> edificios[posicion_edificio] -> cantidad_construidos;
     int max_permitidos = lista_edificios -> edificios[posicion_edificio] -> max_cantidad_permitidos;
+    
     if (construidos + 1 > max_permitidos){
         supera = true;
     }
+
     return supera;    
 }
 
+/*PRE: Recibe el puntero "cantidad_disponible" con la direccion de memoria de la cantidad disponible
+del material que estoy usando
+POST: Modifica dicha la cantidad disponible del material restandole la que es necesaria para 
+la construccion
+*/
+void restar_material(int *cantidad_disponible, int cantidad_material_nec){
+    *cantidad_disponible =  *cantidad_disponible - cantidad_material_nec;
+}
+
+
+void utilizar_materiales(Lista_materiales *lista_materiales, int cantidad_piedra_nec, int cantidad_madera_nec,
+    int cantidad_metal_nec){
+    int i = 0;
+    
+    int *cantidad_disponible = new int;
+    while (i < lista_materiales -> cantidad_de_materiales){
+    
+        string material_a_chequear = lista_materiales -> materiales[i] ->nombre_material;
+        
+        cantidad_disponible =  &(lista_materiales -> materiales[i] -> cantidad_material);
+            
+        if (material_a_chequear == "piedra"){
+            restar_material(cantidad_disponible, cantidad_piedra_nec);
+        }
+        if (material_a_chequear == "madera"){
+            restar_material(cantidad_disponible, cantidad_madera_nec);
+        } 
+        if (material_a_chequear == "piedra"){
+            restar_material(cantidad_disponible, cantidad_metal_nec);
+        }
+        i++;
+    }
+    delete cantidad_disponible;
+    
+}
 
 
 //Precondiciones: Recibe los objetos "lista_edificios" y "lista_materiales" con los edificios y 
@@ -278,21 +349,29 @@ void construir_edificio(Lista_edificios *lista_edificios, Lista_materiales *list
     //en caso contrario, se le deberá consultar al usuario si 
     //desea o no construir el edificio.
     bool construir = true;
-    string edificio_a_construir = edificio_a_construir = obtener_nombre_edificio(lista_edificios);
+    string edificio_a_construir = obtener_nombre_edificio(lista_edificios);
     if (existe_edificio(lista_edificios, edificio_a_construir)){
-            int posicion_edificio = obtener_posicion_edificio(edificio_a_construir, lista_edificios);
             
-            int cantidad_piedra = lista_edificios -> edificios[posicion_edificio] -> cantidad_piedra;
-            int cantidad_madera = lista_edificios -> edificios[posicion_edificio] -> cantidad_madera;
-            int cantidad_metal = lista_edificios -> edificios[posicion_edificio] -> cantidad_metal;
+            int posicion_edificio = obtener_posicion_edificio(edificio_a_construir, lista_edificios);
 
-        if (alcanzan_materiales(lista_materiales,cantidad_piedra, cantidad_madera, cantidad_metal) ){
+            int cantidad_piedra_nec = lista_edificios -> edificios[posicion_edificio] -> cantidad_piedra;
+            int cantidad_madera_nec = lista_edificios -> edificios[posicion_edificio] -> cantidad_madera;
+            int cantidad_metal_nec = lista_edificios -> edificios[posicion_edificio] -> cantidad_metal;
+        if ( alcanzan_materiales(lista_materiales,cantidad_piedra_nec, cantidad_madera_nec, 
+                                 cantidad_metal_nec)){
             
             if( !supera_max_cant(lista_edificios, posicion_edificio) ){
-                //restar_materiales(lista_materiales, cantidad_piedra, cantidad_madera, cantidad_metal);
-                //resto donde corresponda = a funcion alcanzan materiales
-                //agregar_edicio(lista_edificios, posicion_edificio);
-                //sumo 1 en la posicion en construdios. = a supera max cantidad
+                string mensaje = "Desea iniciar la construccion? 1-SI 0-No: ";
+                if (ingresar_opcion(mensaje,0,1)){  //observar que 0 es false
+                    
+                    utilizar_materiales(lista_materiales, cantidad_piedra_nec, cantidad_madera_nec, 
+                                        cantidad_metal_nec);
+                    
+                    //registrar_edificio(lista_edificios, posicion_edificio);
+
+                }else{
+                    cout <<"Se cancelo la construccion de " << edificio_a_construir<<endl;
+                }
 
             }else{
                 cout<<"se supero la maxima cantidad de edificios construidos de dicho tipo";
@@ -319,19 +398,21 @@ int main(){
 
     if (lista_materiales->cantidad_de_materiales != -1 && lista_materiales->cantidad_de_materiales != 0 &&  
     lista_edificios -> cantidad_de_edificios !=-1 && lista_edificios -> cantidad_de_edificios !=0 ){
-        
+    
         //Si se pudieron abrir (!= -1) y no estan vacios (!=0), muestro el menu
-        
+        //listar_todos_edificios(lista_edificios);
+    
+        construir_edificio(lista_edificios, lista_materiales);
+
         cout<<"NOMBRE\t"<<"MATERIAL"<<endl;
         for(int i = 0; i < lista_materiales -> cantidad_de_materiales; i++){
             cout<<lista_materiales -> materiales[i] -> nombre_material<<"\t";
-            cout<<lista_materiales -> materiales[i] -> cantidad_material + 1 <<endl;
+            cout<<lista_materiales -> materiales[i] -> cantidad_material <<endl;
             }
 
-        listar_todos_edificios(lista_edificios);
     }
 
-    //construir_edificio(lista_edificios, lista_materiales);
+
 
     //El sig chequeo de si los archivos se encuentran vacios evitan el sig mensaje de error:
     //free(): double free detected in tcache 2
