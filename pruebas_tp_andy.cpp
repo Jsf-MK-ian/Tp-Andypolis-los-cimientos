@@ -66,11 +66,11 @@ void cargar_edificios(Lista_edificios* lista_edificios){
     if(archivo_edificios.is_open()){
 
         string nombre_edificio;
-        int cantidad_piedra;
-        int cantidad_madera;
-        int cantidad_metal;
-        int cantidad_construidos;
-        int max_cantidad_permitidos;
+        string cantidad_piedra;
+        string cantidad_madera;
+        string cantidad_metal;
+        string cantidad_construidos;
+        string max_cantidad_permitidos;
 
         Edificio* edificio;
 
@@ -84,11 +84,11 @@ void cargar_edificios(Lista_edificios* lista_edificios){
             edificio = new Edificio;
             
             edificio -> nombre_edificio = nombre_edificio;
-            edificio -> cantidad_piedra = cantidad_piedra;
-            edificio -> cantidad_madera = cantidad_madera;
-            edificio -> cantidad_metal = cantidad_metal;
-            edificio -> cantidad_construidos = cantidad_construidos;
-            edificio -> max_cantidad_permitidos = max_cantidad_permitidos;
+            edificio -> cantidad_piedra = stoi(cantidad_piedra);
+            edificio -> cantidad_madera = stoi(cantidad_madera);
+            edificio -> cantidad_metal = stoi(cantidad_metal);
+            edificio -> cantidad_construidos = stoi(cantidad_construidos);
+            edificio -> max_cantidad_permitidos = stoi(max_cantidad_permitidos);
 
             agregar_edificio(lista_edificios, edificio);
         }
@@ -325,7 +325,7 @@ int main(){
         cout<<"NOMBRE\t"<<"MATERIAL"<<endl;
         for(int i = 0; i < lista_materiales -> cantidad_de_materiales; i++){
             cout<<lista_materiales -> materiales[i] -> nombre_material<<"\t";
-            cout<<lista_materiales -> materiales[i] -> cantidad_material<<endl;
+            cout<<lista_materiales -> materiales[i] -> cantidad_material + 1 <<endl;
             }
 
         listar_todos_edificios(lista_edificios);
