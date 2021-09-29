@@ -133,7 +133,7 @@ void cargar_materiales(Lista_materiales* lista_materiales){
     if(archivo_materiales.is_open()){
 
         string nombre;
-        int cant;
+        string cant;
 
         Material* material;
 
@@ -142,7 +142,7 @@ void cargar_materiales(Lista_materiales* lista_materiales){
 
             material = new Material;
             material -> nombre_material = nombre;
-            material -> cantidad_material = cant;
+            material -> cantidad_material = stoi(cant);
 
             agregar_material(lista_materiales, material);
         }
@@ -155,6 +155,14 @@ void cargar_materiales(Lista_materiales* lista_materiales){
     }
 }
 
+void listar_todos_edificios(Lista_edificios *lista_edificios){
+    cout<<"NOMBRE EDIFICIO\t"<<"CANTIDAD CONSTRUIDOS\t"<<"MAX CANTIDAD PERMITIDA"<<endl;
+    for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
+        cout<<lista_edificios -> edificios[i] -> nombre_edificio <<" \t\t";
+        cout<<lista_edificios -> edificios[i] -> cantidad_construidos << " \t\t";
+        cout<<lista_edificios -> edificios[i] -> max_cantidad_permitidos<<endl;
+    }
+}
 
 //Precondiciones: Recibe el objeto "lista_edificios" con los edificios disponibles a elegir
 //Postcondiciones: Devuelve el string "edificio_a_construir"
@@ -238,7 +246,9 @@ bool alcanzan_materiales(Lista_materiales *lista_materiales,int cantidad_piedra_
         }
         i++;
     }
+    return alcanza;
 }
+
 
 
 
@@ -251,7 +261,9 @@ bool supera_max_cant(Lista_edificios *lista_edificios, int posicion_edificio){
     if (construidos + 1 > max_permitidos){
         supera = true;
     }
+    return supera;    
 }
+
 
 
 //Precondiciones: Recibe los objetos "lista_edificios" y "lista_materiales" con los edificios y 
@@ -277,9 +289,9 @@ void construir_edificio(Lista_edificios *lista_edificios, Lista_materiales *list
         if (alcanzan_materiales(lista_materiales,cantidad_piedra, cantidad_madera, cantidad_metal) ){
             
             if( !supera_max_cant(lista_edificios, posicion_edificio) ){
-                restar_materiales(lista_materiales, cantidad_piedra, cantidad_madera, cantidad_metal);
+                //restar_materiales(lista_materiales, cantidad_piedra, cantidad_madera, cantidad_metal);
                 //resto donde corresponda = a funcion alcanzan materiales
-                agregar_edicio(lista_edificios, posicion_edificio);
+                //agregar_edicio(lista_edificios, posicion_edificio);
                 //sumo 1 en la posicion en construdios. = a supera max cantidad
 
             }else{
@@ -295,16 +307,6 @@ void construir_edificio(Lista_edificios *lista_edificios, Lista_materiales *list
     cout<<endl;
     
 };
-
-
-void listar_todos_edificios(Lista_edificios *lista_edificios){
-    cout<<"NOMBRE EDIFICIO\t"<<"CANTIDAD CONSTRUIDOS\t"<<"MAX CANTIDAD PERMITIDA"<<endl;
-    for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
-        cout<<lista_edificios -> edificios[i] -> nombre_edificio <<" \t\t";
-        cout<<lista_edificios -> edificios[i] -> cantidad_construidos << " \t\t";
-        cout<<lista_edificios -> edificios[i] -> max_cantidad_permitidos<<endl;
-    }
-}
 
 
 int main(){
@@ -329,7 +331,7 @@ int main(){
         listar_todos_edificios(lista_edificios);
     }
 
-    construir_edificio(lista_edificios, lista_materiales);
+    //construir_edificio(lista_edificios, lista_materiales);
 
     //El sig chequeo de si los archivos se encuentran vacios evitan el sig mensaje de error:
     //free(): double free detected in tcache 2
