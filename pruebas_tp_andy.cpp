@@ -289,16 +289,27 @@ bool alcanzan_materiales(Lista_materiales *lista_materiales,int cantidad_piedra_
 bool supera_max_cant(Lista_edificios *lista_edificios, int posicion_edificio){
     bool supera = false;
     
-    cout<<"ESTOY AQUI"<<endl;
     int construidos = lista_edificios -> edificios[posicion_edificio] -> cantidad_construidos;
     int max_permitidos = lista_edificios -> edificios[posicion_edificio] -> max_cantidad_permitidos;
-    
+
     if (construidos + 1 > max_permitidos){
         supera = true;
     }
 
     return supera;    
 }
+
+/*
+PRE: Recibe el struct "lista_edificios" con los edificios y su informacion y el entero 
+"posicion_edificio" con la posicion del edificio en el vector edificios del struct lista_edificios.
+POST: Suma 1 a la cantidad de edificios construidos del tipo que indico el usuario
+*/
+void registrar_edificio(Lista_edificios *lista_edificios, int posicion_edificio){
+    
+    lista_edificios -> edificios[posicion_edificio] -> cantidad_construidos +=1;
+
+}
+
 
 /*PRE: Recibe el puntero "cantidad_disponible" con la direccion de memoria de la cantidad disponible
 del material que estoy usando
@@ -314,25 +325,25 @@ void utilizar_materiales(Lista_materiales *lista_materiales, int cantidad_piedra
     int cantidad_metal_nec){
     int i = 0;
     
-    int *cantidad_disponible = new int;
+    int *cantidad_disponible;
+
     while (i < lista_materiales -> cantidad_de_materiales){
     
         string material_a_chequear = lista_materiales -> materiales[i] ->nombre_material;
         
-        cantidad_disponible =  &(lista_materiales -> materiales[i] -> cantidad_material);
-            
+        cantidad_disponible = & (lista_materiales -> materiales[i] -> cantidad_material);
+
         if (material_a_chequear == "piedra"){
             restar_material(cantidad_disponible, cantidad_piedra_nec);
         }
         if (material_a_chequear == "madera"){
             restar_material(cantidad_disponible, cantidad_madera_nec);
         } 
-        if (material_a_chequear == "piedra"){
+        if (material_a_chequear == "metal"){
             restar_material(cantidad_disponible, cantidad_metal_nec);
         }
         i++;
     }
-    delete cantidad_disponible;
     
 }
 
@@ -367,7 +378,7 @@ void construir_edificio(Lista_edificios *lista_edificios, Lista_materiales *list
                     utilizar_materiales(lista_materiales, cantidad_piedra_nec, cantidad_madera_nec, 
                                         cantidad_metal_nec);
                     
-                    //registrar_edificio(lista_edificios, posicion_edificio);
+                    registrar_edificio(lista_edificios, posicion_edificio);
 
                 }else{
                     cout <<"Se cancelo la construccion de " << edificio_a_construir<<endl;
