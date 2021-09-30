@@ -344,7 +344,7 @@ void utilizar_materiales(Lista_materiales *lista_materiales, int cantidad_piedra
         }
         i++;
     }
-    
+
 }
 
 
@@ -381,17 +381,18 @@ void construir_edificio(Lista_edificios *lista_edificios, Lista_materiales *list
                     registrar_edificio(lista_edificios, posicion_edificio);
 
                 }else{
-                    cout <<"Se cancelo la construccion de " << edificio_a_construir<<endl;
+                    cout <<"Se cancelo la construccion de " << edificio_a_construir;
                 }
 
             }else{
-                cout<<"se supero la maxima cantidad de edificios construidos de dicho tipo";
+                cout<<"No se puede construir porque se supera la maxima cantidad de edificios del tipo " 
+                << edificio_a_construir<< " permitidos ";
             }
         }else{
-            cout <<"No alcanzan los materiales para construir el edificio solicitado";
+            cout <<"No alcanzan los materiales para construir el/la "<< edificio_a_construir;
         }
     }else{
-        cout << "El edificio solicitado no se encuentra dispoible para construir";
+        cout << "El edificio " << edificio_a_construir<< " no se encuentra dispoible para construir";
     };
 
     cout<<endl;
@@ -412,17 +413,23 @@ int main(){
     
         //Si se pudieron abrir (!= -1) y no estan vacios (!=0), muestro el menu
         //listar_todos_edificios(lista_edificios);
-    
-        construir_edificio(lista_edificios, lista_materiales);
-
+        for (int i = 0; i <3; i++){
+            construir_edificio(lista_edificios, lista_materiales);
+        }
         cout<<"NOMBRE\t"<<"MATERIAL"<<endl;
         for(int i = 0; i < lista_materiales -> cantidad_de_materiales; i++){
             cout<<lista_materiales -> materiales[i] -> nombre_material<<"\t";
             cout<<lista_materiales -> materiales[i] -> cantidad_material <<endl;
             }
+        
+        cout<<"NOMBRE\t"<<"CONSTRUIDOS\t"<<"MAX_PERMITIDOS"<<endl;
+        for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
+            cout<<lista_edificios -> edificios[i] -> nombre_edificio<<"\t";
+            cout<<lista_edificios -> edificios[i] -> cantidad_construidos<<"\t";
+            cout<<lista_edificios -> edificios[i] -> max_cantidad_permitidos <<endl;
+            }
 
     }
-
 
 
     //El sig chequeo de si los archivos se encuentran vacios evitan el sig mensaje de error:
