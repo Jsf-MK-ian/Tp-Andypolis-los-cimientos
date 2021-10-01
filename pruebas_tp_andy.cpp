@@ -121,7 +121,7 @@ void cargar_edificios(Lista_edificios* lista_edificios){
     }
     else{
         lista_edificios -> cantidad_de_edificios = -1;//para chequear si se abrio o no el archivo
-        cout<<"No se encontro el archivo "<<PATH_EDIFICIOS<<endl;
+        cout<<"NO SE ENCONTRO EL ARCHIVO "<<PATH_EDIFICIOS<<endl;
     }
 }
 
@@ -175,34 +175,97 @@ void cargar_materiales(Lista_materiales* lista_materiales){
     }
     else{
         lista_materiales -> cantidad_de_materiales = -1;//para chequear si se abrio o no el archivo
-        cout<<"No se encontro el archivo "<<PATH_MATERIALES<<endl;
+        cout<<"NO SE ENCONTRO EL ARCHIVO "<<PATH_MATERIALES<<endl;
     }
+}
+
+
+/*
+PRE: Recibe el struct "lista_materiales" con los materiales disponibles
+POST: Muestra por pantalla los materiales de contruccion disponibles y sus respectivas cantidades
+*/
+void listar_materiales_de_construccion(Lista_materiales *lista_materiales){
+    cout<<"\t\t\t       MATERIALES DISPONIBLES \n\n";
+    cout<<"NOMBRE\t"<<"MATERIAL"<<endl;
+    cout<<"-----------------" << endl;
+    for(int i = 0; i < lista_materiales -> cantidad_de_materiales; i++){
+        cout<<lista_materiales -> materiales[i] -> nombre_material<<" \t ";
+        cout<<lista_materiales -> materiales[i] -> cantidad_material <<endl;
+        }
+
+    cout<<endl;    
 }
 
 
 /*
 PRE: Recibe el struct "lista_edificios" con todos los edificios
 
-POST: Muestra por pantalla el listado de edificios con su informacion relacionada respectiva
+POST: Muestra por pantalla el listado de  todos los edificios indicando para cada uno de ellos, 
+cuantas unidades de cada material se requieren para construir uno, cuantos fueron construidos hasta 
+el momento y cuantos más puedo construir sin superar el máximo permitido.
 */
-void listar_todos_edificios(Lista_edificios *lista_edificios){
-    cout<<"NOMBRE EDIFICIO\t"<<"CANTIDAD CONSTRUIDOS\t"<<"MAX CANTIDAD PERMITIDA"<<endl;
+void listar_todos_los_edificios(Lista_edificios *lista_edificios){
+
+    cout<<"\t\t\t       EDIFICIOS DE ANDYPOLIS \n\n";
+    cout<<"NOMBRE\t\t"<<"PIEDRA \t"<<"MADERA\t"<<"METAL\t"<<"CONSTRUIDOS\t"
+    <<"RESTANTES SIN SUPERAR LIMITE"<<endl;
+    cout<<"-----------------------------------------------------------------------------------"<<endl;
     for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
-        cout<<lista_edificios -> edificios[i] -> nombre_edificio <<" \t\t";
-        cout<<lista_edificios -> edificios[i] -> cantidad_construidos << " \t\t";
-        cout<<lista_edificios -> edificios[i] -> max_cantidad_permitidos<<endl;
-    }
+        cout << lista_edificios -> edificios[i] -> nombre_edificio << " \t ";
+        cout << lista_edificios -> edificios[i] -> cantidad_piedra << " \t ";
+        cout << lista_edificios -> edificios[i] -> cantidad_madera << " \t ";
+        cout << lista_edificios -> edificios[i] -> cantidad_metal << " \t ";
+        
+        int construidos = lista_edificios -> edificios[i] -> cantidad_construidos;        
+        int max_cantidad_permitidos =  lista_edificios -> edificios[i] -> max_cantidad_permitidos; 
+
+        int restantes =  max_cantidad_permitidos - construidos;
+
+        cout << "    " <<construidos << " \t\t\t ";
+        cout << restantes <<endl;
+        };
+        
+        cout<<endl;
 }
 
-//PRE: Recibe el struct "lista_edificios" con los edificios disponibles a elegir
-//POST: Devuelve el string "edificio_a_construir"
-string obtener_nombre_edificio(Lista_edificios *lista_edificios){
-    listar_todos_edificios(lista_edificios);
-    string edificio_a_construir;
-    cout<<"Indique el nombre del edifico que desea construir: ";
-    cin >> edificio_a_construir;
+
+/*
+PRE: Recibe el struct "lista_edificios" con todos los edificios
+
+POST: Muestra por pantalla el listado de edificios construidos indicando cuantos hay de cada uno
+*/
+void listar_edificios_construidos(Lista_edificios *lista_edificios){
+    cout<<"\t\t\t       EDIFICIOS CONSTRUIDOS \n\n";
+    cout<<"NOMBRE\t\t"<<"CANTIDAD CONSTRUIDOS"<<endl;
+    cout<<"------------------------------------------"<<endl;
     
-    return edificio_a_construir;
+    for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
+        
+        string nombre_edificio = lista_edificios -> edificios[i] -> nombre_edificio;
+        int construidos = lista_edificios -> edificios[i] -> cantidad_construidos;
+        
+        if (construidos > 0){
+            cout<< nombre_edificio <<" \t\t ";
+            cout << construidos << endl;
+        
+        }
+    }
+    cout<<endl;
+}
+
+/*
+PRE: Recibe el struct "lista_edificios" con los edificios disponibles a elegir y el string 
+mensaje con el mensaje a imprimir por pantalla
+POST: Devuelve el string "edificio_a_construir"
+*/
+string obtener_nombre_edificio(string mensaje, Lista_edificios *lista_edificios){
+    listar_todos_los_edificios(lista_edificios);
+    string nombre_edificio;
+    cout<<mensaje;
+
+    cin >> nombre_edificio;
+    
+    return nombre_edificio;
 }
 
 //Precondiciones: Recibe el struct "lista_edificios" con los edificios existentes
@@ -360,7 +423,8 @@ void construir_edificio(Lista_edificios *lista_edificios, Lista_materiales *list
     //en caso contrario, se le deberá consultar al usuario si 
     //desea o no construir el edificio.
     bool construir = true;
-    string edificio_a_construir = obtener_nombre_edificio(lista_edificios);
+    string mensaje = "Indique el nombre del edificio que desea construir: ";
+    string edificio_a_construir = obtener_nombre_edificio(mensaje,lista_edificios);
     if (existe_edificio(lista_edificios, edificio_a_construir)){
             
             int posicion_edificio = obtener_posicion_edificio(edificio_a_construir, lista_edificios);
@@ -371,7 +435,7 @@ void construir_edificio(Lista_edificios *lista_edificios, Lista_materiales *list
         if ( alcanzan_materiales(lista_materiales,cantidad_piedra_nec, cantidad_madera_nec, 
                                  cantidad_metal_nec)){
             
-            if( !supera_max_cant(lista_edificios, posicion_edificio) ){
+            if( supera_max_cant(lista_edificios, posicion_edificio) ){
                 string mensaje = "Desea iniciar la construccion? 1-SI 0-No: ";
                 if (ingresar_opcion(mensaje,0,1)){  //observar que 0 es false
                     
@@ -400,51 +464,190 @@ void construir_edificio(Lista_edificios *lista_edificios, Lista_materiales *list
 };
 
 
-int main(){
-
-    Lista_materiales*lista_materiales = new Lista_materiales;
-    cargar_materiales(lista_materiales);
+/*
+PRE: Recibe el struct "lista_edificios" con los edificios disponibles y el enetro "posicion_edificio"
+con la posicion del edificio en cuestion
+POST: Resta 1 a la cantidad de edificios construidos del tipo en cuestion
+*/
+void quitar_edificio(Lista_edificios *lista_edificios, int posicion_edificio){
     
-    Lista_edificios*lista_edificios = new Lista_edificios;
-    cargar_edificios(lista_edificios);
+    lista_edificios -> edificios[posicion_edificio] -> cantidad_construidos --;
 
-    if (lista_materiales->cantidad_de_materiales != -1 && lista_materiales->cantidad_de_materiales != 0 &&  
-    lista_edificios -> cantidad_de_edificios !=-1 && lista_edificios -> cantidad_de_edificios !=0 ){
+}
+
+
+/*
+PRE: Recibe el puntero "cantidad_disponible" con la direccion de memoria de la cantidad disponible
+del material que estoy usando
+POST: Modifica dicha la cantidad disponible del material sumandole la mitad de la que es necesaria 
+para la construccion del edificio en cuestion
+*/
+void sumar_material(int *cantidad_disponible, int cantidad_material_nec){
+    *cantidad_disponible =  *cantidad_disponible + cantidad_material_nec/2; 
+                        //truncado (redondeo hacia abajo)                                            
+}
+
+
+/*
+Recibe los structs "lista_materiales" con los materiales disponibles y los enteros 
+"cantidad_piedra_nec", "cantidad_madera_nec", "cantidad_metal_nec" con las respectivas cantidades de
+piedra madera y metal que usa el edificio que se quiere demoler
+*/
+void devolver_materiales(Lista_materiales *lista_materiales, int cantidad_piedra_nec, int cantidad_madera_nec,
+    int cantidad_metal_nec){
+    int i = 0;
     
-        //Si se pudieron abrir (!= -1) y no estan vacios (!=0), muestro el menu
-        //listar_todos_edificios(lista_edificios);
-        for (int i = 0; i <3; i++){
-            construir_edificio(lista_edificios, lista_materiales);
-        }
-        cout<<"NOMBRE\t"<<"MATERIAL"<<endl;
-        for(int i = 0; i < lista_materiales -> cantidad_de_materiales; i++){
-            cout<<lista_materiales -> materiales[i] -> nombre_material<<"\t";
-            cout<<lista_materiales -> materiales[i] -> cantidad_material <<endl;
-            }
+    int *cantidad_disponible;
+
+    while (i < lista_materiales -> cantidad_de_materiales){
+    
+        string material_a_chequear = lista_materiales -> materiales[i] ->nombre_material;
         
-        cout<<"NOMBRE\t"<<"CONSTRUIDOS\t"<<"MAX_PERMITIDOS"<<endl;
-        for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
-            cout<<lista_edificios -> edificios[i] -> nombre_edificio<<"\t";
-            cout<<lista_edificios -> edificios[i] -> cantidad_construidos<<"\t";
-            cout<<lista_edificios -> edificios[i] -> max_cantidad_permitidos <<endl;
-            }
+        cantidad_disponible = & (lista_materiales -> materiales[i] -> cantidad_material);
 
+        if (material_a_chequear == "piedra"){
+            sumar_material(cantidad_disponible, cantidad_piedra_nec);
+        }
+        if (material_a_chequear == "madera"){
+            sumar_material(cantidad_disponible, cantidad_madera_nec);
+        } 
+        if (material_a_chequear == "metal"){
+            sumar_material(cantidad_disponible, cantidad_metal_nec);
+        }
+        i++;
     }
 
+}
 
-    //El sig chequeo de si los archivos se encuentran vacios evitan el sig mensaje de error:
-    //free(): double free detected in tcache 2
-    //Aborted (core dumped)
-    //que salta porque estoy liberando memoria de una supuesta matriz que que no he pedido 
-    //ya sea por no poder abrir el archivo o porque estaba vacio. 
-    //El problema surge al no saber cual es el archivo q causa problemas.
 
-    if (lista_materiales -> cantidad_de_materiales == 0 || lista_materiales -> cantidad_de_materiales == -1){
-        if (lista_materiales -> cantidad_de_materiales == 0){
-        cout<<"EL ARCHIVO '"<<PATH_MATERIALES<<"' ESTA VACIO"<<endl;
-        }
+/*
+PRE: Recibe el struct "lista_edificios" con la lista de edificios y el entero "posicion_edificio"
+con la posicion del edificio en el vector edificios
+POST:Devuelve el booleano "construido" por true si se construyo algun edificio de ese tipo y por
+false en caso contrario
+*/
+bool construido_alguna_vez(Lista_edificios *lista_edificios, int posicion_edificio){
+    bool construido = false;
+
+    int construidos = lista_edificios -> edificios[posicion_edificio] -> cantidad_construidos;
+    int max_permitidos = lista_edificios -> edificios[posicion_edificio] -> max_cantidad_permitidos;
+
+    if (construidos - 1 >= 0){
+        construido = true;
+    }
+
+    return construido;    
+}
+
+
+
+/*
+PRE: Recibe los structs "lista_edificios" y "lista_materiales" con los edificios y 
+materiales disponibles
+POST: demuele el edificio indicado cumpliendo las condiciones del enunciado
+*/
+void demoler_edificio(Lista_edificios *lista_edificios, Lista_materiales *lista_materiales){
+    //Se demolerá el edificio4que tenga el nombre indicado y se devolverán la mitad de los 
+    //materiales utilizados para su construcción
+    string mensaje =  "Indique el nombre del edificio que desea demoler: ";
+    string edificio_a_demoler = obtener_nombre_edificio(mensaje, lista_edificios);
+    if ( existe_edificio(lista_edificios, edificio_a_demoler) ){
+            
+        int posicion_edificio = obtener_posicion_edificio(edificio_a_demoler, lista_edificios);
+
+        int cantidad_piedra_nec = lista_edificios -> edificios[posicion_edificio] -> cantidad_piedra;
+        int cantidad_madera_nec = lista_edificios -> edificios[posicion_edificio] -> cantidad_madera;
+        int cantidad_metal_nec = lista_edificios -> edificios[posicion_edificio] -> cantidad_metal;
+        
+        if( construido_alguna_vez(lista_edificios, posicion_edificio) ){
+                string mensaje = "Desea iniciar la demolicion? 1-SI 0-No: ";
+                if (ingresar_opcion(mensaje,0,1)){  //observar que 0 es false
+                    
+                    devolver_materiales(lista_materiales, cantidad_piedra_nec, cantidad_madera_nec, 
+                                        cantidad_metal_nec);
+                    
+                    quitar_edificio(lista_edificios, posicion_edificio);
+
+                }else{
+                    cout <<"Se cancelo la demolicion de " << edificio_a_demoler;
+                }
+
+            }else{
+                cout<<"Todavia no se ha construido aun ningun edificio del tipo "<< edificio_a_demoler;
+            }
     }else{
-        //libero el heap q use para la matriz
+        cout << "El edificio " << edificio_a_demoler<< " no se encuentra dispoible para demoler";
+    };
+
+    cout<<endl;
+}
+
+
+void escribir_materiales(Lista_materiales* lista_materiales){
+
+}
+
+
+void escribir_edificios(Lista_edificios *lista_edificios){
+
+}
+
+
+void guardar(Lista_materiales* lista_materiales, Lista_edificios *lista_edificios){
+    escribir_materiales(lista_materiales);
+    escribir_edificios(lista_edificios);
+}
+
+
+/*
+PRE: Recibe el struct "lista_edificios" con los edificios disponibles
+POST: Libera el heap que utilizo la matriz de edificios dentro del struct
+*/
+void liberar_heap_edificios(Lista_edificios *lista_edificios){
+
+    if (lista_edificios -> cantidad_de_edificios == 0 || lista_edificios -> cantidad_de_edificios ==-1){
+        
+        if (lista_edificios -> cantidad_de_edificios == 0){
+            cout<<"EL ARCHIVO '"<<PATH_EDIFICIOS<<"' ESTA VACIO"<<endl; 
+        }
+
+    }else{//solo si el archivo se pudo abrir y no estaba vacio libero el heap q use para la matriz. 
+        //Asi evito liberar el heap "innecesariamente":  
+        //free(): (double) free detected in tcache 2 Aborted (core dumped)
+        
+        //borro las filas de la matriz materiales que hay dentro de lista_edificios
+
+        int cantidad_de_edificios = lista_edificios -> cantidad_de_edificios;
+
+        for(int i = 0; i < cantidad_de_edificios; i++){    //xa cada fila
+            delete lista_edificios -> edificios[i];   //se elimina el espacio de la fila
+            //delete[] matriz[i]
+            lista_edificios -> cantidad_de_edificios--;
+        }
+        //delete[] matriz;   //se elimina el vector de vectores
+        delete[] lista_edificios -> edificios;
+        lista_edificios -> edificios = nullptr;
+    }
+    
+}
+
+
+/*
+PRE: Recibe el struct "lista_materiales" con los materiales disponibles
+POST: Libera el heap que utilizo la matriz de materiales dentro del struct
+*/
+void liberar_heap_materiales(Lista_materiales* lista_materiales){
+    
+    if (lista_materiales -> cantidad_de_materiales == 0 || lista_materiales -> cantidad_de_materiales == -1){
+        
+        if (lista_materiales -> cantidad_de_materiales == 0){
+            cout<<"EL ARCHIVO '"<<PATH_MATERIALES<<"' ESTA VACIO"<<endl;
+        }
+
+    }else{ //solo si el archivo se pudo abrir y no estaba vacio libero el heap q use para la matriz. 
+        //Asi evito liberar el heap "innecesariamente":  
+        //free(): (double) free detected in tcache 2 Aborted (core dumped)
+        
         //borro las filas de la matriz materiales que hay dentro de lista_materiales
 
         int cantidad_de_materiales = lista_materiales -> cantidad_de_materiales;
@@ -459,32 +662,53 @@ int main(){
             lista_materiales -> materiales = nullptr;
     }
 
-    if (lista_edificios -> cantidad_de_edificios == 0 || lista_edificios -> cantidad_de_edificios ==-1){
-        if (lista_edificios -> cantidad_de_edificios == 0){
-            cout<<"EL ARCHIVO '"<<PATH_EDIFICIOS<<"' ESTA VACIO"<<endl; 
-        }
-    }else{
-        //Libero el heap q use para la matriz de edificios
-        //borro las filas de la matriz materiales que hay dentro de lista_materiales
+}
 
-        int cantidad_de_edificios = lista_edificios -> cantidad_de_edificios;
 
-        for(int i = 0; i < cantidad_de_edificios; i++){    //xa cada fila
-            delete lista_edificios -> edificios[i];   //se elimina el espacio de la fila
-            //delete[] matriz[i]
-            lista_edificios -> cantidad_de_edificios--;
-        }
-        //delete[] matriz;   //se elimina el vector de vectores
-        delete[] lista_edificios -> edificios;
-        lista_edificios -> edificios = nullptr;
-    }
+int main(){
+
+    Lista_materiales*lista_materiales = new Lista_materiales;
+    cargar_materiales(lista_materiales);
     
+    Lista_edificios*lista_edificios = new Lista_edificios;
+    cargar_edificios(lista_edificios);
 
-    //borro la lista de materiales
-    delete lista_edificios;
-    //borro la lista de materiales
+    if (lista_materiales->cantidad_de_materiales != -1 && lista_materiales->cantidad_de_materiales != 0 &&  
+    lista_edificios -> cantidad_de_edificios !=-1 && lista_edificios -> cantidad_de_edificios !=0 ){
+    
+        //Si se pudieron abrir (!= -1) y no estan vacios (!=0), muestro el menu
+        //listar_edificios_reducida(lista_edificios);
+        // for (int i = 0; i <3; i++){
+        //     construir_edificio(lista_edificios, lista_materiales);
+        // }
+
+        //for(int i = 0; i <3;i++){
+        // demoler_edificio(lista_edificios, lista_materiales);
+        // };
+        
+        //listar_edificios_construidos(lista_edificios);
+        
+        //listar_todos_los_edificios(lista_edificios);
+
+        //listar_materiales_de_construccion(lista_materiales);
+        
+        //guardar(lista_materiales, lista_edificios) solo escribe los archivos
+        //se libera el heap fuera del menu.
+    }
+
+    //que salta porque estoy liberando memoria de una supuesta matriz que que no he pedido 
+    //ya sea por no poder abrir el archivo o porque estaba vacio. 
+    //El problema surge al no saber cual es el archivo q causa problemas.
+    
+    liberar_heap_materiales(lista_materiales);
+    
+    liberar_heap_edificios(lista_edificios);
+
+    //libero el heap que uso la lista de materiales
     delete lista_materiales;
-
+    //idem para edificios
+    delete lista_edificios;
+    
     return 0;
 
 }
