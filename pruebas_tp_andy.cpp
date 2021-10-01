@@ -8,6 +8,13 @@ const string PATH_MATERIALES ="materiales.txt";
 const string PATH_EDIFICIOS = "edificios.txt";
 const int ERROR = -1;
 
+const int LISTAR_MATERIALES = 1;
+const int CONSTRUIR_EDIFICIO = 2;
+const int LISTAR_EDIFICIOS_CONSTRUIDOS = 3;
+const int LISTAR_TODOS_LOS_EDIFICIOS = 4;
+const int DEMOLER_EDIFICIO = 5;
+const int SALIR = 6;
+
 struct Material{
     string nombre_material;
     int cantidad_material;
@@ -36,7 +43,7 @@ struct Lista_edificios{
 
 
 /*
-PRE: recibe el string "texto" con el mensaje a mostrar por pantalla y los entero "ocpiones_maximas" 
+PRE: recibe el string "texto" con el mensaje a mostrar por pantalla y los entero "opciones_maximas" 
 y "opciones_minimas" con el numero de maximas y minimas opciones que es posible elegir.
 
 POST: Devuelve el entero "opcion" con la opcion elegida por el usuario cumpliendose la condicion de
@@ -163,7 +170,6 @@ void cargar_materiales(Lista_materiales* lista_materiales){
 
         while(archivo_materiales >> nombre){
             archivo_materiales >> cant;
-
             material = new Material;
             material -> nombre_material = nombre;
             material -> cantidad_material = stoi(cant);
@@ -435,7 +441,7 @@ void construir_edificio(Lista_edificios *lista_edificios, Lista_materiales *list
         if ( alcanzan_materiales(lista_materiales,cantidad_piedra_nec, cantidad_madera_nec, 
                                  cantidad_metal_nec)){
             
-            if( supera_max_cant(lista_edificios, posicion_edificio) ){
+            if( !supera_max_cant(lista_edificios, posicion_edificio) ){
                 string mensaje = "Desea iniciar la construccion? 1-SI 0-No: ";
                 if (ingresar_opcion(mensaje,0,1)){  //observar que 0 es false
                     
@@ -443,9 +449,9 @@ void construir_edificio(Lista_edificios *lista_edificios, Lista_materiales *list
                                         cantidad_metal_nec);
                     
                     registrar_edificio(lista_edificios, posicion_edificio);
-
+                    cout <<"Se construyo exitoamente el/la " << edificio_a_construir;
                 }else{
-                    cout <<"Se cancelo la construccion de " << edificio_a_construir;
+                    cout <<"Se cancelo la construccion del/la " << edificio_a_construir;
                 }
 
             }else{
@@ -567,13 +573,14 @@ void demoler_edificio(Lista_edificios *lista_edificios, Lista_materiales *lista_
                                         cantidad_metal_nec);
                     
                     quitar_edificio(lista_edificios, posicion_edificio);
+                    cout<< "Se demolio exitoamente  el/la "<< edificio_a_demoler;
 
                 }else{
-                    cout <<"Se cancelo la demolicion de " << edificio_a_demoler;
+                    cout <<"Se cancelo la demolicion del /la " << edificio_a_demoler;
                 }
 
             }else{
-                cout<<"Todavia no se ha construido aun ningun edificio del tipo "<< edificio_a_demoler;
+                cout<<"Todavia no se ha construido aun ningun/a "<< edificio_a_demoler;
             }
     }else{
         cout << "El edificio " << edificio_a_demoler<< " no se encuentra dispoible para demoler";
@@ -583,19 +590,21 @@ void demoler_edificio(Lista_edificios *lista_edificios, Lista_materiales *lista_
 }
 
 
-void escribir_materiales(Lista_materiales* lista_materiales){
+/*
+PRE: Recibe el objeto de tipo osfatream "archivo_edificios" correspondiente al archivo con los datos,
+el struct "lista_edificios" con todos los edificios y su respectiva informacion y el entero "i" que
+representa la posicion en el vector edificios del struct "lista_edificios"
 
-}
-
-
-void escribir_edificios(Lista_edificios *lista_edificios){
-
-}
-
-
-void guardar(Lista_materiales* lista_materiales, Lista_edificios *lista_edificios){
-    escribir_materiales(lista_materiales);
-    escribir_edificios(lista_edificios);
+POST: Escribe en el archivo el edificio de indice "i" con su respectiva info
+*/
+void escribir_edificio(ofstream *archivo_edificios,Lista_edificios * lista_edificios, int i){
+    
+    *archivo_edificios << lista_edificios -> edificios[i] -> nombre_edificio <<' '
+    << lista_edificios -> edificios[i] -> cantidad_piedra << ' '
+    << lista_edificios -> edificios[i] -> cantidad_madera << ' '
+    << lista_edificios -> edificios[i] -> cantidad_metal << ' '
+    << lista_edificios -> edificios[i] -> cantidad_construidos << ' '
+    << lista_edificios -> edificios[i] -> max_cantidad_permitidos << endl;
 }
 
 
@@ -603,63 +612,123 @@ void guardar(Lista_materiales* lista_materiales, Lista_edificios *lista_edificio
 PRE: Recibe el struct "lista_edificios" con los edificios disponibles
 POST: Libera el heap que utilizo la matriz de edificios dentro del struct
 */
-void liberar_heap_edificios(Lista_edificios *lista_edificios){
+void guardar_edificios(Lista_edificios *lista_edificios){
 
-    if (lista_edificios -> cantidad_de_edificios == 0 || lista_edificios -> cantidad_de_edificios ==-1){
+    //borro las filas de la matriz materiales que hay dentro de lista_edificios
+    
+    ofstream archivo_edificios(PATH_EDIFICIOS);
+
+    int cantidad_de_edificios = lista_edificios -> cantidad_de_edificios;
+
+    for(int i = 0; i < cantidad_de_edificios; i++){    //xa cada fila
         
-        if (lista_edificios -> cantidad_de_edificios == 0){
-            cout<<"EL ARCHIVO '"<<PATH_EDIFICIOS<<"' ESTA VACIO"<<endl; 
-        }
+        escribir_edificio(&archivo_edificios, lista_edificios, i);
 
-    }else{//solo si el archivo se pudo abrir y no estaba vacio libero el heap q use para la matriz. 
-        //Asi evito liberar el heap "innecesariamente":  
-        //free(): (double) free detected in tcache 2 Aborted (core dumped)
-        
-        //borro las filas de la matriz materiales que hay dentro de lista_edificios
-
-        int cantidad_de_edificios = lista_edificios -> cantidad_de_edificios;
-
-        for(int i = 0; i < cantidad_de_edificios; i++){    //xa cada fila
-            delete lista_edificios -> edificios[i];   //se elimina el espacio de la fila
-            //delete[] matriz[i]
-            lista_edificios -> cantidad_de_edificios--;
-        }
-        //delete[] matriz;   //se elimina el vector de vectores
-        delete[] lista_edificios -> edificios;
-        lista_edificios -> edificios = nullptr;
+        delete lista_edificios -> edificios[i];   //se elimina el espacio de la fila
+        //delete[] matriz[i]
+        lista_edificios -> cantidad_de_edificios--;
     }
+    //delete[] matriz;   //se elimina el vector de vectores
+    delete[] lista_edificios -> edificios;
+    lista_edificios -> edificios = nullptr;
     
 }
 
 
 /*
 PRE: Recibe el struct "lista_materiales" con los materiales disponibles
+
 POST: Libera el heap que utilizo la matriz de materiales dentro del struct
 */
-void liberar_heap_materiales(Lista_materiales* lista_materiales){
+void guardar_materiales(Lista_materiales* lista_materiales){
+  
+    //borro las filas de la matriz materiales que hay dentro de lista_materiales
     
+    ofstream archivo_materiales(PATH_MATERIALES);
+
+    int cantidad_de_materiales = lista_materiales -> cantidad_de_materiales;
+
+        for(int i = 0; i < cantidad_de_materiales; i++){    //xa cada fila
+            archivo_materiales << lista_materiales -> materiales[i] -> nombre_material << ' '
+                << lista_materiales -> materiales[i] -> cantidad_material << '\n';
+            
+            delete lista_materiales -> materiales[i];   //se elimina el espacio de la fila
+            //delete[] matriz[i]
+            lista_materiales -> cantidad_de_materiales--;
+        }
+        //delete[] matriz;   //se elimina el vector de vectores
+        delete[] lista_materiales -> materiales;
+        lista_materiales -> materiales = nullptr;
+
+}
+
+/*
+PRE: Recibe los structs "lista_materiales" con los materiales disponibles y "lista_edificios" con los
+edificios disponibles
+
+POST: Libera el heap que utilizo la matriz de materiales dentro del struct
+*/
+void guardar_archivos(Lista_materiales *lista_materiales, Lista_edificios * lista_edificios){
     if (lista_materiales -> cantidad_de_materiales == 0 || lista_materiales -> cantidad_de_materiales == -1){
         
         if (lista_materiales -> cantidad_de_materiales == 0){
             cout<<"EL ARCHIVO '"<<PATH_MATERIALES<<"' ESTA VACIO"<<endl;
         }
+    }else{
+        guardar_materiales(lista_materiales);
+    }
 
-    }else{ //solo si el archivo se pudo abrir y no estaba vacio libero el heap q use para la matriz. 
-        //Asi evito liberar el heap "innecesariamente":  
-        //free(): (double) free detected in tcache 2 Aborted (core dumped)
+    if (lista_edificios -> cantidad_de_edificios == 0 || lista_edificios -> cantidad_de_edificios ==-1){
         
-        //borro las filas de la matriz materiales que hay dentro de lista_materiales
+        if (lista_edificios -> cantidad_de_edificios == 0){
+            cout<<"EL ARCHIVO '"<<PATH_EDIFICIOS<<"' ESTA VACIO"<<endl; 
+        }
+    }else{
+        guardar_edificios(lista_edificios);
+    }
+}
 
-        int cantidad_de_materiales = lista_materiales -> cantidad_de_materiales;
 
-            for(int i = 0; i < cantidad_de_materiales; i++){    //xa cada fila
-                delete lista_materiales -> materiales[i];   //se elimina el espacio de la fila
-                //delete[] matriz[i]
-                lista_materiales -> cantidad_de_materiales--;
-            }
-            //delete[] matriz;   //se elimina el vector de vectores
-            delete[] lista_materiales -> materiales;
-            lista_materiales -> materiales = nullptr;
+void mostrar_menu(){
+    cout << endl; // << endl << endl;
+    cout << "MENU" << endl
+    << "\t" << "1 - Listar materiales de construccio " << endl
+    << "\t" << "2 - construir edificio por nombre " << endl
+    << "\t" << "3 - Listar los edificios construidos" << endl
+    << "\t" << "4 - Listar todos los edificios " << endl
+    << "\t" << "5 - Demoler un edificio por nombre " << endl
+    << "\t" << "6 - Guardar y salir"<<endl;
+}
+
+
+void menu_opciones(Lista_materiales *lista_materiales, Lista_edificios *lista_edificios, int opcion){
+
+    switch (opcion){
+        case LISTAR_MATERIALES:
+            listar_materiales_de_construccion(lista_materiales);
+            break;
+
+        case CONSTRUIR_EDIFICIO:
+            construir_edificio(lista_edificios, lista_materiales);
+            break;
+
+        case LISTAR_EDIFICIOS_CONSTRUIDOS:
+            //agregar caso no hay edificios construidos
+            listar_edificios_construidos(lista_edificios);
+            break;
+
+        case LISTAR_TODOS_LOS_EDIFICIOS:
+            listar_todos_los_edificios(lista_edificios);
+            break;
+            
+        case DEMOLER_EDIFICIO:
+            demoler_edificio(lista_edificios, lista_materiales);
+            break;
+
+        case SALIR:
+
+            break;
+        
     }
 
 }
@@ -675,38 +744,27 @@ int main(){
 
     if (lista_materiales->cantidad_de_materiales != -1 && lista_materiales->cantidad_de_materiales != 0 &&  
     lista_edificios -> cantidad_de_edificios !=-1 && lista_edificios -> cantidad_de_edificios !=0 ){
-    
-        //Si se pudieron abrir (!= -1) y no estan vacios (!=0), muestro el menu
-        //listar_edificios_reducida(lista_edificios);
-        // for (int i = 0; i <3; i++){
-        //     construir_edificio(lista_edificios, lista_materiales);
-        // }
+    //Si se pudieron abrir LOS DOS ARCHIVOS (!= -1) y no estan vacios (!=0), muestro el menu
 
-        //for(int i = 0; i <3;i++){
-        // demoler_edificio(lista_edificios, lista_materiales);
-        // };
-        
-        //listar_edificios_construidos(lista_edificios);
-        
-        //listar_todos_los_edificios(lista_edificios);
+        mostrar_menu();
+        int opcion = ingresar_opcion("Ingrese una opcion: ",1,6);
 
-        //listar_materiales_de_construccion(lista_materiales);
-        
-        //guardar(lista_materiales, lista_edificios) solo escribe los archivos
-        //se libera el heap fuera del menu.
+        while(opcion != SALIR){
+            menu_opciones(lista_materiales, lista_edificios, opcion);
+            mostrar_menu();
+            opcion = ingresar_opcion("Ingrese una opcion: ",1,6);
+        }
+
     }
-
-    //que salta porque estoy liberando memoria de una supuesta matriz que que no he pedido 
-    //ya sea por no poder abrir el archivo o porque estaba vacio. 
-    //El problema surge al no saber cual es el archivo q causa problemas.
+    //El objetivo de guardar fuera del menu, es que en caso de que 1 SOLO de los archivos no se pueda
+    //abrir o leer, no se libere memoria en el heap innecesariamente ( free(): free detected in 
+    //tcache  Aborted (core dumped)") pero si se libere la que uso el archivo 
+    //que SE PUDO ABRIR CON EXITO.
     
-    liberar_heap_materiales(lista_materiales);
-    
-    liberar_heap_edificios(lista_edificios);
+    guardar_archivos(lista_materiales, lista_edificios );
 
-    //libero el heap que uso la lista de materiales
     delete lista_materiales;
-    //idem para edificios
+
     delete lista_edificios;
     
     return 0;
