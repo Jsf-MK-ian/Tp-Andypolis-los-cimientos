@@ -63,6 +63,7 @@ int ingresar_opcion(string texto, int opciones_minimas, int opciones_maximas){
         cin >> opcion;
         es_opcion_valida = (opcion >= opciones_minimas && opcion <= opciones_maximas);
     }
+    cout<<endl;
     return opcion;
 }
 

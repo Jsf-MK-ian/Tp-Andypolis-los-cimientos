@@ -25,6 +25,7 @@ int ingresar_opcion(string texto, int opciones_minimas, int opciones_maximas){
         cin >> opcion;
         es_opcion_valida = (opcion >= opciones_minimas && opcion <= opciones_maximas);
     }
+    cout << endl;
     return opcion;
 }
 
@@ -553,7 +554,7 @@ void guardar_archivos(Lista_materiales *lista_materiales, Lista_edificios * list
 void mostrar_menu(){
     cout << endl; // << endl << endl;
     cout << "MENU" << endl
-    << "\t" << "1 - Listar materiales de construccio " << endl
+    << "\t" << "1 - Listar materiales de construccion " << endl
     << "\t" << "2 - construir edificio por nombre " << endl
     << "\t" << "3 - Listar los edificios construidos" << endl
     << "\t" << "4 - Listar todos los edificios " << endl
