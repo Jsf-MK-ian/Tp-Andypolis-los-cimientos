@@ -150,20 +150,18 @@ void cargar_materiales(Lista_materiales* lista_materiales){
 }
 
 
-
 void listar_materiales_de_construccion(Lista_materiales *lista_materiales){
     cout << setfill(' ') << setw(64)<<"MATERIALES DE CONSTRUCCION"<<"\n\n"
-    << setfill(' ') <<setw(48) <<"NOMBRE"<< setfill(' ')<<setw(13)<<"MATERIAL"<<endl
-    << setfill(' ') <<setw(70)<<"______________________________________" <<endl<<endl;
+    << setfill(' ') <<setw(45) <<"MATERIAL"<< setfill(' ')<<setw(21)<<"CANTIDAD DISPONIBLE"<<endl
+    << setfill(' ') <<setw(72)<<"__________________________________________" <<endl<<endl;
     
     for(int i = 0; i < lista_materiales -> cantidad_de_materiales; i++){
-        cout<<setfill(' ')<<setw(48)<<lista_materiales -> materiales[i] -> nombre_material
-        <<setfill(' ')<<setw(11)<<lista_materiales -> materiales[i] -> cantidad_material <<endl;
+        cout<<setfill(' ')<<setw(45)<<lista_materiales -> materiales[i] -> nombre_material
+        <<setfill(' ')<<setw(12)<<lista_materiales -> materiales[i] -> cantidad_material <<endl;
         }
 
     cout<<endl;    
 }
-
 
 
 void listar_todos_los_edificios(Lista_edificios *lista_edificios){
@@ -195,7 +193,6 @@ void listar_todos_los_edificios(Lista_edificios *lista_edificios){
 }
 
 
-
 void listar_edificios_construidos(Lista_edificios *lista_edificios){
     cout<< setfill(' ') << setw(66)<<"EDIFICIOS CONSTRUIDOS \n\n"
     <<setfill(' ')<<setw(45)<<"NOMBRE"<<setfill(' ')<<setw(24)<<"CANTIDAD CONSTRUIDOS"<<endl
@@ -216,12 +213,10 @@ void listar_edificios_construidos(Lista_edificios *lista_edificios){
 }
 
 
-string obtener_nombre_edificio(string &nombre_edificio){
+void obtener_nombre_edificio(string &nombre_edificio){
     
     cin >> nombre_edificio;
     cout<<endl;
-    
-    return nombre_edificio;
 }
 
 
@@ -239,12 +234,12 @@ bool existe_edificio(Lista_edificios *lista_edificios, string edificio_a_constru
 }
 
 
-int obtener_posicion_edificio(string edificio_a_construir, Lista_edificios* lista_edificios){
+int obtener_posicion_edificio(string nombre_edificio, Lista_edificios* lista_edificios){
     bool encontrado = false;
     int posicion = ERROR;
     int i = 0;
     while (!encontrado && i< lista_edificios -> cantidad_de_edificios){
-        if (lista_edificios -> edificios[i] -> nombre_edificio == edificio_a_construir){
+        if (lista_edificios -> edificios[i] -> nombre_edificio == nombre_edificio){
             encontrado = true;
             posicion = i;
         }
@@ -252,7 +247,6 @@ int obtener_posicion_edificio(string edificio_a_construir, Lista_edificios* list
     }
     return posicion;
 }
-
 
 
 void chequear_material(int cantidad_disponible, int cantidad_material_nec, bool &alcanza){
@@ -288,8 +282,7 @@ bool alcanzan_materiales(Lista_materiales *lista_materiales,int cantidad_piedra_
 }
 
 
-
-bool supera_max_cant(Lista_edificios *lista_edificios, int posicion_edificio){
+bool supera_max_cant_permitida(Lista_edificios *lista_edificios, int posicion_edificio){
     bool supera = false;
     
     int construidos = lista_edificios -> edificios[posicion_edificio] -> cantidad_construidos;
@@ -338,9 +331,7 @@ void utilizar_materiales(Lista_materiales *lista_materiales, int cantidad_piedra
         }
         i++;
     }
-
 }
-
 
 
 void construir_edificio(string edificio_a_construir,Lista_edificios *lista_edificios, Lista_materiales *lista_materiales){
@@ -355,7 +346,7 @@ void construir_edificio(string edificio_a_construir,Lista_edificios *lista_edifi
         if ( alcanzan_materiales(lista_materiales,cantidad_piedra_nec, cantidad_madera_nec, 
                                  cantidad_metal_nec)){
             
-            if( !supera_max_cant(lista_edificios, posicion_edificio) ){
+            if( !supera_max_cant_permitida(lista_edificios, posicion_edificio) ){
                 string mensaje = "Desea iniciar la construccion? 1-SI 0-No: ";
                 if (ingresar_opcion(mensaje,0,1)){  //observar que 0 es false
                     
@@ -384,11 +375,9 @@ void construir_edificio(string edificio_a_construir,Lista_edificios *lista_edifi
 };
 
 
-
 void quitar_edificio(Lista_edificios *lista_edificios, int posicion_edificio){
     
     lista_edificios -> edificios[posicion_edificio] -> cantidad_construidos --;
-
 }
 
 
@@ -430,7 +419,7 @@ bool construido_alguna_vez(Lista_edificios *lista_edificios, int posicion_edific
 
     int construidos = lista_edificios -> edificios[posicion_edificio] -> cantidad_construidos;
 
-    if (construidos - 1 >= 0){
+    if (construidos > 0){
         construido = true;
     }
 
@@ -574,10 +563,10 @@ void menu_opciones(Lista_materiales *lista_materiales, Lista_edificios *lista_ed
         case CONSTRUIR_EDIFICIO:{
             cout<<"Indique el nombre del edificio que desea construir: ";
             
-            string edificio_a_demoler;
-            obtener_nombre_edificio(edificio_a_demoler);
+            string edificio_a_construir;
+            obtener_nombre_edificio(edificio_a_construir);
 
-            construir_edificio(edificio_a_demoler,lista_edificios, lista_materiales);
+            construir_edificio(edificio_a_construir,lista_edificios, lista_materiales);
             break;
             }
 
