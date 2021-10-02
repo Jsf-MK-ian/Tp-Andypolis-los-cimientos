@@ -194,12 +194,12 @@ POST: Muestra por pantalla los materiales de contruccion disponibles y sus respe
 */
 void listar_materiales_de_construccion(Lista_materiales *lista_materiales){
     cout << setfill(' ') << setw(64)<<"MATERIALES DE CONSTRUCCION"<<"\n\n"
-    << setfill(' ') <<setw(48) <<"NOMBRE"<< setfill(' ')<<setw(13)<<"MATERIAL"<<endl
-    << setfill(' ') <<setw(70)<<"______________________________________" <<endl<<endl;
+    << setfill(' ') <<setw(45) <<"MATERIAL"<< setfill(' ')<<setw(21)<<"CANTIDAD DISPONIBLE"<<endl
+    << setfill(' ') <<setw(72)<<"__________________________________________" <<endl<<endl;
     
     for(int i = 0; i < lista_materiales -> cantidad_de_materiales; i++){
-        cout<<setfill(' ')<<setw(48)<<lista_materiales -> materiales[i] -> nombre_material
-        <<setfill(' ')<<setw(11)<<lista_materiales -> materiales[i] -> cantidad_material <<endl;
+        cout<<setfill(' ')<<setw(45)<<lista_materiales -> materiales[i] -> nombre_material
+        <<setfill(' ')<<setw(12)<<lista_materiales -> materiales[i] -> cantidad_material <<endl;
         }
 
     cout<<endl;    
