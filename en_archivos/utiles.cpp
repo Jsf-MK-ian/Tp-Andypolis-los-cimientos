@@ -1,6 +1,7 @@
 #include <iostream>
 #include "utiles.h"
 #include <fstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -160,17 +161,17 @@ PRE: Recibe el struct "lista_materiales" con los materiales disponibles
 POST: Muestra por pantalla los materiales de contruccion disponibles y sus respectivas cantidades
 */
 void listar_materiales_de_construccion(Lista_materiales *lista_materiales){
-    cout<<"\t\t\t       MATERIALES DISPONIBLES \n\n";
-    cout<<"NOMBRE\t"<<"MATERIAL"<<endl;
-    cout<<"-----------------" << endl;
+    cout << setfill(' ') << setw(64)<<"MATERIALES DE CONSTRUCCION"<<"\n\n"
+    << setfill(' ') <<setw(48) <<"NOMBRE"<< setfill(' ')<<setw(13)<<"MATERIAL"<<endl
+    << setfill(' ') <<setw(70)<<"______________________________________" <<endl<<endl;
+    
     for(int i = 0; i < lista_materiales -> cantidad_de_materiales; i++){
-        cout<<lista_materiales -> materiales[i] -> nombre_material<<" \t ";
-        cout<<lista_materiales -> materiales[i] -> cantidad_material <<endl;
+        cout<<setfill(' ')<<setw(48)<<lista_materiales -> materiales[i] -> nombre_material
+        <<setfill(' ')<<setw(11)<<lista_materiales -> materiales[i] -> cantidad_material <<endl;
         }
 
     cout<<endl;    
 }
-
 
 /*
 PRE: Recibe el struct "lista_edificios" con todos los edificios
@@ -181,23 +182,27 @@ el momento y cuantos más puedo construir sin superar el máximo permitido.
 */
 void listar_todos_los_edificios(Lista_edificios *lista_edificios){
 
-    cout<<"\t\t\t       EDIFICIOS DE ANDYPOLIS \n\n";
-    cout<<"NOMBRE\t\t"<<"PIEDRA \t"<<"MADERA\t"<<"METAL\t"<<"CONSTRUIDOS\t"
-    <<"RESTANTES SIN SUPERAR LIMITE"<<endl;
-    cout<<"-----------------------------------------------------------------------------------"<<endl;
+    cout<< setfill(' ') << setw(64)<<"EDIFICIOS DE ANDYPOLIS \n\n";
+    cout<<setfill(' ')<<setw(20)<<"NOMBRE"<< setfill(' ')<<setw(11)<<"PIEDRA"
+    <<setfill(' ') << setw(8)<<"MADERA"<< setfill(' ') << setw(8)<<"METAL"
+    <<setfill(' ') << setw(13)<<"CONSTRUIDOS"
+    <<setfill(' ') << setw(31)<<"RESTANTES SIN SUPERAR LIMITE"<<endl;
+    cout<<"\t"<<"_______________________________________________________________________________________";
+    cout<<endl<<endl;
     for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
-        cout << lista_edificios -> edificios[i] -> nombre_edificio << " \t ";
-        cout << lista_edificios -> edificios[i] -> cantidad_piedra << " \t ";
-        cout << lista_edificios -> edificios[i] -> cantidad_madera << " \t ";
-        cout << lista_edificios -> edificios[i] -> cantidad_metal << " \t ";
+        cout << setfill(' ')<<setw(20)<< lista_edificios -> edificios[i] -> nombre_edificio
+        << setfill(' ')<<setw(10)<< lista_edificios -> edificios[i] -> cantidad_piedra
+        << setfill(' ')<<setw(8)<< lista_edificios -> edificios[i] -> cantidad_madera
+        << setfill(' ')<<setw(8) << lista_edificios -> edificios[i] -> cantidad_metal;
         
         int construidos = lista_edificios -> edificios[i] -> cantidad_construidos;        
         int max_cantidad_permitidos =  lista_edificios -> edificios[i] -> max_cantidad_permitidos; 
 
         int restantes =  max_cantidad_permitidos - construidos;
 
-        cout << "    " <<construidos << " \t\t\t ";
-        cout << restantes <<endl;
+        cout << setfill(' ') << setw(10) << construidos
+        <<setfill(' ') << setw(17)<< restantes <<endl;
+        
         };
         
         cout<<endl;
@@ -210,9 +215,9 @@ PRE: Recibe el struct "lista_edificios" con todos los edificios
 POST: Muestra por pantalla el listado de edificios construidos indicando cuantos hay de cada uno
 */
 void listar_edificios_construidos(Lista_edificios *lista_edificios){
-    cout<<"\t\t\t       EDIFICIOS CONSTRUIDOS \n\n";
-    cout<<"NOMBRE\t\t"<<"CANTIDAD CONSTRUIDOS"<<endl;
-    cout<<"------------------------------------------"<<endl;
+    cout<< setfill(' ') << setw(66)<<"EDIFICIOS CONSTRUIDOS \n\n"
+    <<setfill(' ')<<setw(45)<<"NOMBRE"<<setfill(' ')<<setw(24)<<"CANTIDAD CONSTRUIDOS"<<endl
+    <<setfill(' ')<<setw(77)<<"_________________________________________________"<<endl<<endl;
     
     for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
         
@@ -220,28 +225,27 @@ void listar_edificios_construidos(Lista_edificios *lista_edificios){
         int construidos = lista_edificios -> edificios[i] -> cantidad_construidos;
         
         if (construidos > 0){
-            cout<< nombre_edificio <<" \t\t ";
-            cout << construidos << endl;
+            cout << setfill(' ')<<setw(45) << nombre_edificio
+            <<setfill(' ')<<setw(12)<< construidos << endl;
         
         }
     }
     cout<<endl;
 }
 
+
 /*
-PRE: Recibe el struct "lista_edificios" con los edificios disponibles a elegir y el string 
-mensaje con el mensaje a imprimir por pantalla
+PRE: Recibe el struct "lista_edificios" con los edificios disponibles
 POST: Devuelve el string "edificio_a_construir"
 */
-string obtener_nombre_edificio(string mensaje, Lista_edificios *lista_edificios){
-    listar_todos_los_edificios(lista_edificios);
-    string nombre_edificio;
-    cout<<mensaje;
-
+string obtener_nombre_edificio(string &nombre_edificio){
+    
     cin >> nombre_edificio;
+    cout<<endl;
     
     return nombre_edificio;
 }
+
 
 //Precondiciones: Recibe el struct "lista_edificios" con los edificios existentes
 //Postcondiciones: Devuelve el booleano 'existe' con true si se encuentra entre los disponibles o
@@ -389,16 +393,8 @@ void utilizar_materiales(Lista_materiales *lista_materiales, int cantidad_piedra
 //Precondiciones: Recibe los objetos "lista_edificios" y "lista_materiales" con los edificios y 
 //materiales disponibles
 //Potscondiciones: Devueleve??
-void construir_edificio(Lista_edificios *lista_edificios, Lista_materiales *lista_materiales){
-    //Construir edificios por nombreSe deberá 
-    //verificar que exista el edificio, 
-    //se cuente con la cantidad de materiales necesaria para poder construir y 
-    //que no se haya superado el máximo de construcciones permitidas del mismo.
-    // Si no cumple dichas condicionesse le avisara porque no es posible construir el edificio pedido, 
-    //en caso contrario, se le deberá consultar al usuario si 
-    //desea o no construir el edificio.
-    string mensaje = "Indique el nombre del edificio que desea construir: ";
-    string edificio_a_construir = obtener_nombre_edificio(mensaje,lista_edificios);
+void construir_edificio(string edificio_a_construir,Lista_edificios *lista_edificios, Lista_materiales *lista_materiales){
+    
     if (existe_edificio(lista_edificios, edificio_a_construir)){
             
             int posicion_edificio = obtener_posicion_edificio(edificio_a_construir, lista_edificios);
@@ -430,7 +426,7 @@ void construir_edificio(Lista_edificios *lista_edificios, Lista_materiales *list
             cout <<"No alcanzan los materiales para construir el/la "<< edificio_a_construir;
         }
     }else{
-        cout << "El edificio " << edificio_a_construir<< " no se encuentra dispoible para construir";
+        cout << "El edificio " << edificio_a_construir<< " no se encuentra en los planes de Andypolis";
     };
 
     cout<<endl;
@@ -519,11 +515,8 @@ PRE: Recibe los structs "lista_edificios" y "lista_materiales" con los edificios
 materiales disponibles
 POST: demuele el edificio indicado cumpliendo las condiciones del enunciado
 */
-void demoler_edificio(Lista_edificios *lista_edificios, Lista_materiales *lista_materiales){
-    //Se demolerá el edificio4que tenga el nombre indicado y se devolverán la mitad de los 
-    //materiales utilizados para su construcción
-    string mensaje =  "Indique el nombre del edificio que desea demoler: ";
-    string edificio_a_demoler = obtener_nombre_edificio(mensaje, lista_edificios);
+void demoler_edificio(string edificio_a_demoler, Lista_edificios *lista_edificios, Lista_materiales *lista_materiales){
+ 
     if ( existe_edificio(lista_edificios, edificio_a_demoler) ){
             
         int posicion_edificio = obtener_posicion_edificio(edificio_a_demoler, lista_edificios);
@@ -547,10 +540,10 @@ void demoler_edificio(Lista_edificios *lista_edificios, Lista_materiales *lista_
                 }
 
             }else{
-                cout<<"Todavia no se ha construido aun ningun/a "<< edificio_a_demoler;
+                cout<<"No hay ningun/a "<< edificio_a_demoler << " construido todavia";
             }
     }else{
-        cout << "El edificio " << edificio_a_demoler<< " no se encuentra dispoible para demoler";
+        cout << "El edificio " << edificio_a_demoler<< " no se encuentra en los planes de Andypolis";
     };
 
     cout<<endl;
@@ -676,9 +669,15 @@ void menu_opciones(Lista_materiales *lista_materiales, Lista_edificios *lista_ed
             listar_materiales_de_construccion(lista_materiales);
             break;
 
-        case CONSTRUIR_EDIFICIO:
-            construir_edificio(lista_edificios, lista_materiales);
+        case CONSTRUIR_EDIFICIO:{
+            cout<<"Indique el nombre del edificio que desea construir: ";
+            
+            string edificio_a_demoler;
+            obtener_nombre_edificio(edificio_a_demoler);
+
+            construir_edificio(edificio_a_demoler,lista_edificios, lista_materiales);
             break;
+            }
 
         case LISTAR_EDIFICIOS_CONSTRUIDOS:
             //agregar caso no hay edificios construidos
@@ -689,10 +688,16 @@ void menu_opciones(Lista_materiales *lista_materiales, Lista_edificios *lista_ed
             listar_todos_los_edificios(lista_edificios);
             break;
             
-        case DEMOLER_EDIFICIO:
-            demoler_edificio(lista_edificios, lista_materiales);
-            break;
+        case DEMOLER_EDIFICIO:{
+            cout<<"Indique el nombre del edificio que desea demoler: ";
+            
+            string edificio_a_demoler;
+            obtener_nombre_edificio(edificio_a_demoler);
 
+            demoler_edificio(edificio_a_demoler,lista_edificios, lista_materiales);
+            break;
+            }
+        
         case SALIR:
 
             break;

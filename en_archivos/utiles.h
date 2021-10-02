@@ -149,7 +149,7 @@ void utilizar_materiales(Lista_materiales *lista_materiales, int cantidad_piedra
 //Precondiciones: Recibe los objetos "lista_edificios" y "lista_materiales" con los edificios y 
 //materiales disponibles
 //Potscondiciones: Devueleve??
-void construir_edificio(Lista_edificios *lista_edificios, Lista_materiales *lista_materiales);
+void construir_edificio(string nombre_edificio, Lista_edificios *lista_edificios, Lista_materiales *lista_materiales);
 
 
 /*
@@ -192,7 +192,7 @@ PRE: Recibe los structs "lista_edificios" y "lista_materiales" con los edificios
 materiales disponibles
 POST: demuele el edificio indicado cumpliendo las condiciones del enunciado
 */
-void demoler_edificio(Lista_edificios *lista_edificios, Lista_materiales *lista_materiales);
+void demoler_edificio(string nombre_edificio ,Lista_edificios *lista_edificios, Lista_materiales *lista_materiales);
 
 
 /*
