@@ -1,4 +1,7 @@
-piedra 1000
-metal 1000
-madera 1000
+obsidiana_roja 830
+piedra 1100
+metal 1300
+cemento 450
+madera 1200
 oro 1300
+cobre 13000
