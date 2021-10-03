@@ -130,7 +130,6 @@ void cargar_edificios(Lista_edificios* lista_edificios){
     }
     else{
         lista_edificios -> cantidad_de_edificios = -1;//para chequear si se abrio o no el archivo
-        cout<<"NO SE ENCONTRO EL ARCHIVO "<<PATH_EDIFICIOS<<endl;
     }
 }
 
@@ -183,7 +182,6 @@ void cargar_materiales(Lista_materiales* lista_materiales){
     }
     else{
         lista_materiales -> cantidad_de_materiales = -1;//para chequear si se abrio o no el archivo
-        cout<<"NO SE ENCONTRO EL ARCHIVO "<<PATH_MATERIALES<<endl;
     }
 }
 
@@ -663,20 +661,25 @@ edificios disponibles
 POST: Libera el heap que utilizo la matriz de materiales dentro del struct
 */
 void guardar_archivos(Lista_materiales *lista_materiales, Lista_edificios * lista_edificios){
-    if (lista_materiales -> cantidad_de_materiales == 0 || lista_materiales -> cantidad_de_materiales == -1){
-        
-        if (lista_materiales -> cantidad_de_materiales == 0){
-            cout<<"EL ARCHIVO '"<<PATH_MATERIALES<<"' ESTA VACIO"<<endl;
-        }
-    }else{
+    //chequeo apertura materiales
+    if (lista_materiales -> cantidad_de_materiales == 0){
+        cout<<"EL ARCHIVO '"<<PATH_MATERIALES<<"' ESTA VACIO"<<endl;
+    
+    }else if (lista_materiales -> cantidad_de_materiales == ERROR){
+        cout<<"NO SE ENCONTRO EL ARCHIVO "<<PATH_MATERIALES<<endl;
+    
+    } else {
         guardar_materiales(lista_materiales);
     }
-
-    if (lista_edificios -> cantidad_de_edificios == 0 || lista_edificios -> cantidad_de_edificios ==-1){
-        
-        if (lista_edificios -> cantidad_de_edificios == 0){
-            cout<<"EL ARCHIVO '"<<PATH_EDIFICIOS<<"' ESTA VACIO"<<endl; 
-        }
+    
+    //edificios
+    
+    if (lista_edificios -> cantidad_de_edificios == 0) {
+        cout<<"EL ARCHIVO '"<<PATH_EDIFICIOS<<"' ESTA VACIO"<<endl; 
+   
+    }else if(lista_edificios -> cantidad_de_edificios == ERROR){
+        cout<<"NO SE ENCONTRO EL ARCHIVO "<<PATH_EDIFICIOS<<endl;
+    
     }else{
         guardar_edificios(lista_edificios);
     }
