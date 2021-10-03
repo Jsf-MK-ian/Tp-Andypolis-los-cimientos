@@ -11,7 +11,7 @@ int main(){
     cargar_edificios(lista_edificios);
 
     if (lista_materiales -> cantidad_de_materiales != ERROR && lista_materiales -> cantidad_de_materiales != 0
-        && lista_edificios -> cantidad_de_edificios !=-ERROR && lista_edificios -> cantidad_de_edificios !=0 ){
+        && lista_edificios -> cantidad_de_edificios != ERROR && lista_edificios -> cantidad_de_edificios !=0 ){
         //Si se pudieron abrir LOS DOS ARCHIVOS (!= -1 (!=ERROR) ) y no estan vacios (!=0), entro al menu
 
         mostrar_menu();
