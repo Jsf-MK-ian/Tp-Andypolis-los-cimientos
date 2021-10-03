@@ -12,8 +12,22 @@ const int LISTAR_TODOS_LOS_EDIFICIOS = 4;
 const int DEMOLER_EDIFICIO = 5;
 
 
-int ingresar_opcion(string texto, int opciones_minimas, int opciones_maximas){
+void mostrar_menu(){
     
+    cout << endl; 
+    cout << "MENU" << endl
+    << "\t" << "1 - Listar materiales de construccion " << endl
+    << "\t" << "2 - Construir edificio por nombre " << endl
+    << "\t" << "3 - Listar los edificios construidos" << endl
+    << "\t" << "4 - Listar todos los edificios " << endl
+    << "\t" << "5 - Demoler un edificio por nombre " << endl
+    << "\t" << "6 - Guardar y salir" <<endl;
+    cout<<endl;
+}
+
+
+int ingresar_opcion(string texto, int opciones_minimas, int opciones_maximas){
+
     cout<<texto;
     
     int opcion;
@@ -21,7 +35,7 @@ int ingresar_opcion(string texto, int opciones_minimas, int opciones_maximas){
 
     bool es_opcion_valida = (opcion >= opciones_minimas && opcion <= opciones_maximas);
     while(!es_opcion_valida){
-        cout << "por favor ingrese una opcion valida: ";
+        cout << "Por favor ingrese una opcion valida: ";
         cin >> opcion;
         es_opcion_valida = (opcion >= opciones_minimas && opcion <= opciones_maximas);
     }
@@ -30,7 +44,59 @@ int ingresar_opcion(string texto, int opciones_minimas, int opciones_maximas){
 }
 
 
+void agregar_material(Lista_materiales* lista_materiales, Material* material){
+    
+    int tope_viejo = lista_materiales -> cantidad_de_materiales;
+
+    Material** nuevo_vector_materiales = new Material*[tope_viejo + 1];
+
+    for(int i = 0; i < lista_materiales -> cantidad_de_materiales; i++){
+        nuevo_vector_materiales[i] = lista_materiales -> materiales[i];
+    }
+    nuevo_vector_materiales[tope_viejo] = material;
+
+    if(lista_materiales -> cantidad_de_materiales != 0){
+        delete[] lista_materiales -> materiales;
+    }
+
+    lista_materiales -> materiales = nuevo_vector_materiales;
+    lista_materiales -> cantidad_de_materiales++;
+}
+
+
+void cargar_materiales(Lista_materiales* lista_materiales){
+    
+    lista_materiales -> cantidad_de_materiales = 0;
+
+    fstream archivo_materiales(PATH_MATERIALES, ios::in);
+
+    if(archivo_materiales.is_open()){
+
+        string nombre;
+        string cant;
+
+        Material* material;
+
+        while(archivo_materiales >> nombre){
+            archivo_materiales >> cant;
+            material = new Material;
+            material -> nombre_material = nombre;
+            material -> cantidad_material = stoi(cant);
+
+            agregar_material(lista_materiales, material);
+        }
+
+        archivo_materiales.close();
+    }
+    else{
+        lista_materiales -> cantidad_de_materiales = -1;    //para chequear si se abrio o no el archivo
+        cout<<"NO SE ENCONTRO EL ARCHIVO "<<PATH_MATERIALES<<endl;
+    }
+}
+
+
 void agregar_edificio(Lista_edificios* lista_edificios, Edificio* edificio){
+    
     int tope_viejo = lista_edificios -> cantidad_de_edificios;
 
     Edificio** nuevo_vector_edificios = new Edificio*[tope_viejo + 1];
@@ -50,6 +116,7 @@ void agregar_edificio(Lista_edificios* lista_edificios, Edificio* edificio){
 
 
 void cargar_edificios(Lista_edificios* lista_edificios){
+    
     lista_edificios -> cantidad_de_edificios = 0;
 
     fstream archivo_edificios(PATH_EDIFICIOS, ios::in);
@@ -93,56 +160,8 @@ void cargar_edificios(Lista_edificios* lista_edificios){
 }
 
 
-void agregar_material(Lista_materiales* lista_materiales, Material* material){
-    int tope_viejo = lista_materiales -> cantidad_de_materiales;
-
-    Material** nuevo_vector_materiales = new Material*[tope_viejo + 1];
-
-    for(int i = 0; i < lista_materiales -> cantidad_de_materiales; i++){
-        nuevo_vector_materiales[i] = lista_materiales -> materiales[i];
-    }
-    nuevo_vector_materiales[tope_viejo] = material;
-
-    if(lista_materiales -> cantidad_de_materiales != 0){
-        delete[] lista_materiales -> materiales;
-    }
-
-    lista_materiales -> materiales = nuevo_vector_materiales;
-    lista_materiales -> cantidad_de_materiales++;
-}
-
-
-void cargar_materiales(Lista_materiales* lista_materiales){
-    lista_materiales -> cantidad_de_materiales = 0;
-
-    fstream archivo_materiales(PATH_MATERIALES, ios::in);
-
-    if(archivo_materiales.is_open()){
-
-        string nombre;
-        string cant;
-
-        Material* material;
-
-        while(archivo_materiales >> nombre){
-            archivo_materiales >> cant;
-            material = new Material;
-            material -> nombre_material = nombre;
-            material -> cantidad_material = stoi(cant);
-
-            agregar_material(lista_materiales, material);
-        }
-
-        archivo_materiales.close();
-    }
-    else{
-        lista_materiales -> cantidad_de_materiales = -1;    //para chequear si se abrio o no el archivo
-        cout<<"NO SE ENCONTRO EL ARCHIVO "<<PATH_MATERIALES<<endl;
-    }
-}
-
-
 void listar_materiales_de_construccion(Lista_materiales *lista_materiales){
+    
     cout << setfill(' ') << setw(64)<<"MATERIALES DE CONSTRUCCION"<<"\n\n"
     << setfill(' ') <<setw(45) <<"MATERIAL"<< setfill(' ')<<setw(21)<<"CANTIDAD DISPONIBLE"<<endl
     << setfill(' ') <<setw(72)<<"__________________________________________" <<endl<<endl;
@@ -159,12 +178,15 @@ void listar_materiales_de_construccion(Lista_materiales *lista_materiales){
 void listar_todos_los_edificios(Lista_edificios *lista_edificios){
 
     cout<< setfill(' ') << setw(64)<<"EDIFICIOS DE ANDYPOLIS \n\n";
+    
     cout<<setfill(' ')<<setw(20)<<"NOMBRE"<< setfill(' ')<<setw(11)<<"PIEDRA"
     <<setfill(' ') << setw(8)<<"MADERA"<< setfill(' ') << setw(8)<<"METAL"
     <<setfill(' ') << setw(13)<<"CONSTRUIDOS"
     <<setfill(' ') << setw(31)<<"RESTANTES SIN SUPERAR LIMITE"<<endl;
-    cout<<"\t"<<"_______________________________________________________________________________________";
-    cout<<endl<<endl;
+    
+    cout<<"\t"<<"_______________________________________________________________________________________"
+    <<endl<<endl;
+    
     for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
         cout << setfill(' ')<<setw(20)<< lista_edificios -> edificios[i] -> nombre_edificio
         << setfill(' ')<<setw(10)<< lista_edificios -> edificios[i] -> cantidad_piedra
@@ -221,6 +243,7 @@ void obtener_nombre_edificio(string &nombre_edificio){
 
 
 bool existe_edificio(Lista_edificios *lista_edificios, string edificio_a_construir){
+    
     bool existe = false;
     int i = 0;
     while ( !existe && i < lista_edificios -> cantidad_de_edificios){
@@ -273,7 +296,7 @@ bool alcanzan_materiales(Lista_materiales *lista_materiales,int cantidad_piedra_
         if (material_a_chequear == "madera"){
             chequear_material(cantidad_disponible, cantidad_madera_nec, alcanza);
         } 
-        if (material_a_chequear == "piedra"){
+        if (material_a_chequear == "metal"){
             chequear_material(cantidad_disponible, cantidad_metal_nec, alcanza);
         }
         i++;
@@ -283,6 +306,7 @@ bool alcanzan_materiales(Lista_materiales *lista_materiales,int cantidad_piedra_
 
 
 bool supera_max_cant_permitida(Lista_edificios *lista_edificios, int posicion_edificio){
+    
     bool supera = false;
     
     int construidos = lista_edificios -> edificios[posicion_edificio] -> cantidad_construidos;
@@ -310,13 +334,14 @@ void restar_material(int *cantidad_disponible, int cantidad_material_nec){
 
 void utilizar_materiales(Lista_materiales *lista_materiales, int cantidad_piedra_nec, int cantidad_madera_nec,
     int cantidad_metal_nec){
+    
     int i = 0;
     
     int *cantidad_disponible;
 
     while (i < lista_materiales -> cantidad_de_materiales){
     
-        string material_a_chequear = lista_materiales -> materiales[i] ->nombre_material;
+        string material_a_chequear = lista_materiales -> materiales[i] -> nombre_material;
         
         cantidad_disponible = & (lista_materiales -> materiales[i] -> cantidad_material);
 
@@ -334,19 +359,21 @@ void utilizar_materiales(Lista_materiales *lista_materiales, int cantidad_piedra
 }
 
 
-void construir_edificio(string edificio_a_construir,Lista_edificios *lista_edificios, Lista_materiales *lista_materiales){
+void construir_edificio(string edificio_a_construir, Lista_edificios *lista_edificios, Lista_materiales *lista_materiales){
     
     if (existe_edificio(lista_edificios, edificio_a_construir)){
             
-            int posicion_edificio = obtener_posicion_edificio(edificio_a_construir, lista_edificios);
+        int posicion_edificio = obtener_posicion_edificio(edificio_a_construir, lista_edificios);
 
-            int cantidad_piedra_nec = lista_edificios -> edificios[posicion_edificio] -> cantidad_piedra;
-            int cantidad_madera_nec = lista_edificios -> edificios[posicion_edificio] -> cantidad_madera;
-            int cantidad_metal_nec = lista_edificios -> edificios[posicion_edificio] -> cantidad_metal;
+        int cantidad_piedra_nec = lista_edificios -> edificios[posicion_edificio] -> cantidad_piedra;
+        int cantidad_madera_nec = lista_edificios -> edificios[posicion_edificio] -> cantidad_madera;
+        int cantidad_metal_nec = lista_edificios -> edificios[posicion_edificio] -> cantidad_metal;
+        
         if ( alcanzan_materiales(lista_materiales,cantidad_piedra_nec, cantidad_madera_nec, 
                                  cantidad_metal_nec)){
             
             if( !supera_max_cant_permitida(lista_edificios, posicion_edificio) ){
+                
                 string mensaje = "Desea iniciar la construccion? 1-SI 0-No: ";
                 if (ingresar_opcion(mensaje,0,1)){  //observar que 0 es false
                     
@@ -354,7 +381,9 @@ void construir_edificio(string edificio_a_construir,Lista_edificios *lista_edifi
                                         cantidad_metal_nec);
                     
                     registrar_edificio(lista_edificios, posicion_edificio);
+                    
                     cout <<"Se construyo exitoamente el/la " << edificio_a_construir;
+                
                 }else{
                     cout <<"Se cancelo la construccion del/la " << edificio_a_construir;
                 }
@@ -382,6 +411,7 @@ void quitar_edificio(Lista_edificios *lista_edificios, int posicion_edificio){
 
 
 void sumar_material(int *cantidad_disponible, int cantidad_material_nec){
+    
     *cantidad_disponible =  *cantidad_disponible + cantidad_material_nec/2; 
                         //truncado (redondeo hacia abajo)                                            
 }
@@ -389,6 +419,7 @@ void sumar_material(int *cantidad_disponible, int cantidad_material_nec){
 
 void devolver_materiales(Lista_materiales *lista_materiales, int cantidad_piedra_nec, int cantidad_madera_nec,
     int cantidad_metal_nec){
+    
     int i = 0;
     
     int *cantidad_disponible;
@@ -438,6 +469,7 @@ void demoler_edificio(string edificio_a_demoler, Lista_edificios *lista_edificio
         int cantidad_metal_nec = lista_edificios -> edificios[posicion_edificio] -> cantidad_metal;
         
         if( construido_alguna_vez(lista_edificios, posicion_edificio) ){
+            
                 string mensaje = "Desea iniciar la demolicion? 1-SI 0-No: ";
                 if (ingresar_opcion(mensaje,0,1)){  //observar que 0 es false
                     
@@ -501,93 +533,88 @@ void guardar_materiales(Lista_materiales* lista_materiales){
     int cantidad_de_materiales = lista_materiales -> cantidad_de_materiales;
 
         for(int i = 0; i < cantidad_de_materiales; i++){
+            
             archivo_materiales << lista_materiales -> materiales[i] -> nombre_material << ' '
-                << lista_materiales -> materiales[i] -> cantidad_material << '\n';
+            << lista_materiales -> materiales[i] -> cantidad_material << '\n';
             
             delete lista_materiales -> materiales[i];
 
             lista_materiales -> cantidad_de_materiales--;
         }
 
-        delete[] lista_materiales -> materiales;
-        lista_materiales -> materiales = nullptr;
+    delete[] lista_materiales -> materiales;
+    lista_materiales -> materiales = nullptr;
 
 }
 
 
 void guardar_archivos(Lista_materiales *lista_materiales, Lista_edificios * lista_edificios){
-    if (lista_materiales -> cantidad_de_materiales == 0 || lista_materiales -> cantidad_de_materiales == -1){
+    
+    if (lista_materiales -> cantidad_de_materiales == 0 || lista_materiales -> cantidad_de_materiales == ERROR){
         
         if (lista_materiales -> cantidad_de_materiales == 0){
             cout<<"EL ARCHIVO '"<<PATH_MATERIALES<<"' ESTA VACIO"<<endl;
         }
-    }else{
+    } else {
         guardar_materiales(lista_materiales);
     }
 
-    if (lista_edificios -> cantidad_de_edificios == 0 || lista_edificios -> cantidad_de_edificios ==-1){
+    if (lista_edificios -> cantidad_de_edificios == 0 || lista_edificios -> cantidad_de_edificios == ERROR){
         
         if (lista_edificios -> cantidad_de_edificios == 0){
             cout<<"EL ARCHIVO '"<<PATH_EDIFICIOS<<"' ESTA VACIO"<<endl; 
         }
-    }else{
+    } else {
         guardar_edificios(lista_edificios);
     }
-}
-
-
-void mostrar_menu(){
-    cout << endl;
-    cout << "MENU" << endl
-    << "\t" << "1 - Listar materiales de construccion " << endl
-    << "\t" << "2 - construir edificio por nombre " << endl
-    << "\t" << "3 - Listar los edificios construidos" << endl
-    << "\t" << "4 - Listar todos los edificios " << endl
-    << "\t" << "5 - Demoler un edificio por nombre " << endl
-    << "\t" << "6 - Guardar y salir"<<endl;
-    cout<<endl;
 }
 
 
 void procesar_opcion(Lista_materiales *lista_materiales, Lista_edificios *lista_edificios, int opcion){
 
     switch (opcion){
+
         case LISTAR_MATERIALES:
+            
             listar_materiales_de_construccion(lista_materiales);
+            
             break;
 
         case CONSTRUIR_EDIFICIO:{
+           
             cout<<"Indique el nombre del edificio que desea construir: ";
             
             string edificio_a_construir;
             obtener_nombre_edificio(edificio_a_construir);
 
             construir_edificio(edificio_a_construir,lista_edificios, lista_materiales);
-            break;
+            
+            break; 
             }
 
         case LISTAR_EDIFICIOS_CONSTRUIDOS:
+            
             listar_edificios_construidos(lista_edificios);
+            
             break;
 
         case LISTAR_TODOS_LOS_EDIFICIOS:
+            
             listar_todos_los_edificios(lista_edificios);
+            
             break;
             
         case DEMOLER_EDIFICIO:{
+            
             cout<<"Indique el nombre del edificio que desea demoler: ";
             
             string edificio_a_demoler;
             obtener_nombre_edificio(edificio_a_demoler);
 
             demoler_edificio(edificio_a_demoler,lista_edificios, lista_materiales);
+            
             break;
             }
-        
-        case SALIR:
-
-            break;
-        
     }
 
 }
