@@ -1,8 +1,11 @@
 #include <iostream>
 #include "utiles.h"
+#include <iomanip>
 
 
 int main(){
+    cout<<endl;
+    cout<< setfill(' ') << setw(97)<<"BIENVENIDO AL SISTEMA DE ADMINISTRACION DE CONSTRUCCION DE ANDYPOLIS \n\n";
 
     Lista_materiales *lista_materiales = new Lista_materiales;
     cargar_materiales(lista_materiales);
