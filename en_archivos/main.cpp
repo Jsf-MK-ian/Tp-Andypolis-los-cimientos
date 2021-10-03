@@ -12,7 +12,7 @@ int main(){
 
     if (lista_materiales -> cantidad_de_materiales != ERROR && lista_materiales -> cantidad_de_materiales != 0
         && lista_edificios -> cantidad_de_edificios != ERROR && lista_edificios -> cantidad_de_edificios !=0 ){
-        //Si se pudieron abrir LOS DOS ARCHIVOS (!= -1 (!=ERROR) ) y no estan vacios (!=0), entro al menu
+        //Si se pudieron abrir LOS DOS ARCHIVOS (!=ERROR) y no estan vacios (!=0), entro al menu
 
         mostrar_menu();
         int opcion = ingresar_opcion("Ingrese una opcion: ",1,6);
@@ -26,7 +26,7 @@ int main(){
     }
 
     /*El objetivo de guardar fuera del menu, es que en caso de que 1 SOLO de los archivos no se pueda
-    abrir o leer, no se libere memoria en el heap innecesariamente error: ( free(): free detected in 
+    abrir o leer, no se libere memoria en el heap innecesariamente error: " ( free(): free detected in 
     tcache  Aborted (core dumped)") pero si se libere la que uso el archivo 
     que SE PUDO ABRIR CON EXITO.*/
     

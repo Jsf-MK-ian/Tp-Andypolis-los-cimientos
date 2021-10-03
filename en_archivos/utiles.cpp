@@ -89,7 +89,7 @@ void cargar_materiales(Lista_materiales* lista_materiales){
         archivo_materiales.close();
     }
     else{
-        lista_materiales -> cantidad_de_materiales = -1;    //para chequear si se abrio o no el archivo
+        lista_materiales -> cantidad_de_materiales = ERROR;    //para chequear si se abrio o no el archivo
     }
 }
 
@@ -153,7 +153,7 @@ void cargar_edificios(Lista_edificios* lista_edificios){
         archivo_edificios.close();
     }
     else{
-        lista_edificios -> cantidad_de_edificios = -1;  //para chequear si se abrio o no el archivo
+        lista_edificios -> cantidad_de_edificios = ERROR;  //para chequear si se abrio o no el archivo
     }
 }
 
