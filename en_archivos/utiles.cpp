@@ -191,20 +191,22 @@ void listar_edificios_construidos(Lista_edificios *lista_edificios){
     <<setfill(' ')<<setw(45)<<"NOMBRE"<<setfill(' ')<<setw(24)<<"CANTIDAD CONSTRUIDOS"<<endl
     <<setfill(' ')<<setw(77)<<"_________________________________________________"<<endl<<endl;
     
-    if (lista_edificios ->cantidad_de_edificios > 0 ) {
-        for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
-            
-            string nombre_edificio = lista_edificios -> edificios[i] -> nombre_edificio;
-            int construidos = lista_edificios -> edificios[i] -> cantidad_construidos;
-            
-            if (construidos > 0){
-                cout << setfill(' ')<<setw(45) << nombre_edificio
-                <<setfill(' ')<<setw(12)<< construidos << endl;
-            
-            }
+    int total_edificios_construidos = 0;
+    
+    for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
+        
+        string nombre_edificio = lista_edificios -> edificios[i] -> nombre_edificio;
+        int construidos = lista_edificios -> edificios[i] -> cantidad_construidos;
+        
+        if (construidos > 0){
+            cout << setfill(' ')<<setw(45) << nombre_edificio
+            <<setfill(' ')<<setw(12)<< construidos << endl;
+            total_edificios_construidos +=1;
         }
-    }else{
-        cout << setfill(' ') << setw(77) << "No hay ningun edificio construido";
+    }    
+    
+    if (total_edificios_construidos == 0 ){
+        cout << setfill(' ') << setw(70) << "No hay ningun edificio construido";
     }
     
     cout<<endl;
