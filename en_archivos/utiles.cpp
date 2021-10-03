@@ -33,14 +33,10 @@ int ingresar_opcion(string texto, int opciones_minimas, int opciones_maximas){
 void agregar_edificio(Lista_edificios* lista_edificios, Edificio* edificio){
     int tope_viejo = lista_edificios -> cantidad_de_edificios;
 
-    // int ** matriz;
-    // matriz = new int*[4];
     Edificio** nuevo_vector_edificios = new Edificio*[tope_viejo + 1];
 
-    // for (int i = 0; i < 4; i++){ //xa cada fila
     for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
         nuevo_vector_edificios[i] = lista_edificios -> edificios[i];
-        //matriz[i] = new int[5] };
     }
     nuevo_vector_edificios[tope_viejo] = edificio;
 
@@ -91,7 +87,7 @@ void cargar_edificios(Lista_edificios* lista_edificios){
         archivo_edificios.close();
     }
     else{
-        lista_edificios -> cantidad_de_edificios = -1;//para chequear si se abrio o no el archivo
+        lista_edificios -> cantidad_de_edificios = -1;  //para chequear si se abrio o no el archivo
         cout<<"NO SE ENCONTRO EL ARCHIVO "<<PATH_EDIFICIOS<<endl;
     }
 }
@@ -100,14 +96,10 @@ void cargar_edificios(Lista_edificios* lista_edificios){
 void agregar_material(Lista_materiales* lista_materiales, Material* material){
     int tope_viejo = lista_materiales -> cantidad_de_materiales;
 
-    // int ** matriz;
-    // matriz = new int*[4];
     Material** nuevo_vector_materiales = new Material*[tope_viejo + 1];
 
-    // for (int i = 0; i < 4; i++){ //xa cada fila
     for(int i = 0; i < lista_materiales -> cantidad_de_materiales; i++){
         nuevo_vector_materiales[i] = lista_materiales -> materiales[i];
-        //matriz[i] = new int[5] };
     }
     nuevo_vector_materiales[tope_viejo] = material;
 
@@ -144,7 +136,7 @@ void cargar_materiales(Lista_materiales* lista_materiales){
         archivo_materiales.close();
     }
     else{
-        lista_materiales -> cantidad_de_materiales = -1;//para chequear si se abrio o no el archivo
+        lista_materiales -> cantidad_de_materiales = -1;    //para chequear si se abrio o no el archivo
         cout<<"NO SE ENCONTRO EL ARCHIVO "<<PATH_MATERIALES<<endl;
     }
 }
@@ -194,21 +186,27 @@ void listar_todos_los_edificios(Lista_edificios *lista_edificios){
 
 
 void listar_edificios_construidos(Lista_edificios *lista_edificios){
+    
     cout<< setfill(' ') << setw(66)<<"EDIFICIOS CONSTRUIDOS \n\n"
     <<setfill(' ')<<setw(45)<<"NOMBRE"<<setfill(' ')<<setw(24)<<"CANTIDAD CONSTRUIDOS"<<endl
     <<setfill(' ')<<setw(77)<<"_________________________________________________"<<endl<<endl;
     
-    for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
-        
-        string nombre_edificio = lista_edificios -> edificios[i] -> nombre_edificio;
-        int construidos = lista_edificios -> edificios[i] -> cantidad_construidos;
-        
-        if (construidos > 0){
-            cout << setfill(' ')<<setw(45) << nombre_edificio
-            <<setfill(' ')<<setw(12)<< construidos << endl;
-        
+    if (lista_edificios ->cantidad_de_edificios > 0 ) {
+        for(int i = 0; i < lista_edificios -> cantidad_de_edificios; i++){
+            
+            string nombre_edificio = lista_edificios -> edificios[i] -> nombre_edificio;
+            int construidos = lista_edificios -> edificios[i] -> cantidad_construidos;
+            
+            if (construidos > 0){
+                cout << setfill(' ')<<setw(45) << nombre_edificio
+                <<setfill(' ')<<setw(12)<< construidos << endl;
+            
+            }
         }
+    }else{
+        cout << setfill(' ') << setw(77) << "No hay ningun edificio construido";
     }
+    
     cout<<endl;
 }
 
@@ -474,22 +472,20 @@ void escribir_edificio(ofstream *archivo_edificios,Lista_edificios * lista_edifi
 
 
 void guardar_edificios(Lista_edificios *lista_edificios){
-
-    //borro las filas de la matriz materiales que hay dentro de lista_edificios
     
     ofstream archivo_edificios(PATH_EDIFICIOS);
 
     int cantidad_de_edificios = lista_edificios -> cantidad_de_edificios;
 
-    for(int i = 0; i < cantidad_de_edificios; i++){    //xa cada fila
+    for(int i = 0; i < cantidad_de_edificios; i++){ 
         
         escribir_edificio(&archivo_edificios, lista_edificios, i);
 
-        delete lista_edificios -> edificios[i];   //se elimina el espacio de la fila
-        //delete[] matriz[i]
+        delete lista_edificios -> edificios[i];
+
         lista_edificios -> cantidad_de_edificios--;
     }
-    //delete[] matriz;   //se elimina el vector de vectores
+
     delete[] lista_edificios -> edificios;
     lista_edificios -> edificios = nullptr;
     
@@ -497,22 +493,20 @@ void guardar_edificios(Lista_edificios *lista_edificios){
 
 
 void guardar_materiales(Lista_materiales* lista_materiales){
-  
-    //borro las filas de la matriz materiales que hay dentro de lista_materiales
-    
+      
     ofstream archivo_materiales(PATH_MATERIALES);
 
     int cantidad_de_materiales = lista_materiales -> cantidad_de_materiales;
 
-        for(int i = 0; i < cantidad_de_materiales; i++){    //xa cada fila
+        for(int i = 0; i < cantidad_de_materiales; i++){
             archivo_materiales << lista_materiales -> materiales[i] -> nombre_material << ' '
                 << lista_materiales -> materiales[i] -> cantidad_material << '\n';
             
-            delete lista_materiales -> materiales[i];   //se elimina el espacio de la fila
-            //delete[] matriz[i]
+            delete lista_materiales -> materiales[i];
+
             lista_materiales -> cantidad_de_materiales--;
         }
-        //delete[] matriz;   //se elimina el vector de vectores
+
         delete[] lista_materiales -> materiales;
         lista_materiales -> materiales = nullptr;
 
@@ -541,7 +535,7 @@ void guardar_archivos(Lista_materiales *lista_materiales, Lista_edificios * list
 
 
 void mostrar_menu(){
-    cout << endl; // << endl << endl;
+    cout << endl;
     cout << "MENU" << endl
     << "\t" << "1 - Listar materiales de construccion " << endl
     << "\t" << "2 - construir edificio por nombre " << endl
@@ -553,7 +547,7 @@ void mostrar_menu(){
 }
 
 
-void menu_opciones(Lista_materiales *lista_materiales, Lista_edificios *lista_edificios, int opcion){
+void procesar_opcion(Lista_materiales *lista_materiales, Lista_edificios *lista_edificios, int opcion){
 
     switch (opcion){
         case LISTAR_MATERIALES:
@@ -571,7 +565,6 @@ void menu_opciones(Lista_materiales *lista_materiales, Lista_edificios *lista_ed
             }
 
         case LISTAR_EDIFICIOS_CONSTRUIDOS:
-            //agregar caso no hay edificios construidos
             listar_edificios_construidos(lista_edificios);
             break;
 

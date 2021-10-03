@@ -18,7 +18,7 @@ int main(){
         int opcion = ingresar_opcion("Ingrese una opcion: ",1,6);
 
         while(opcion != SALIR){
-            menu_opciones(lista_materiales, lista_edificios, opcion);
+            procesar_opcion(lista_materiales, lista_edificios, opcion);
             mostrar_menu();
             opcion = ingresar_opcion("Ingrese una opcion: ",1,6);
         }

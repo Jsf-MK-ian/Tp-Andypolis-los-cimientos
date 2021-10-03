@@ -15,11 +15,12 @@ struct Material{
     int cantidad_material;
 };
 
+
 struct Lista_materiales{
-    // int ** matriz; //creo el doble puntero
     Material** materiales;
     int cantidad_de_materiales;   
 };
+
 
 struct Edificio{
     string nombre_edificio;
@@ -30,8 +31,8 @@ struct Edificio{
     int max_cantidad_permitidos;
 };
 
+
 struct Lista_edificios{
-    // int ** matriz; //creo el doble puntero
     Edificio** edificios;
     int cantidad_de_edificios;   
 };
@@ -118,7 +119,7 @@ void obtener_nombre_edificio(string &nombre_edificio);
 
 /*
 PRE: Recibe el struct "lista_edificios" con los edificios existentes y el string "edificio_a_construir"
-con el nombre del edificio a construir.
+con un nombre valido de un edificio a construir.
 
 POST: Devuelve el booleano "existe" con true si el edificio se encuentra entre los disponibles o
 con false en caso contrario.
@@ -160,7 +161,7 @@ bool alcanzan_materiales(Lista_materiales *lista_materiales,int cantidad_piedra_
 
 /*
 PRE: Recibe el struct "lista_edificios" con los edificios disponibles y
-el entero "posicion_edificio" con la posicion del edificio en el vector de edificios 
+el entero "posicion_edificio" con una posicion valida en el vector de edificios 
 del estruct "lista_edificios".
 
 POST: Devuelve el booleano "supera" por true en caso de que la cantidad de edificios 
@@ -171,7 +172,7 @@ bool supera_max_cant_permitida(Lista_edificios *lista_edificios, int posicion_ed
 
 /*
 PRE: Recibe el struct "lista_edificios" con los edificios disponibles y el
-entero "posicion_edificio" con la posicion del edificio en el vector de 
+entero "posicion_edificio" con una posicion valida en el vector de 
 edificios del struct "lista_edificios.""
 
 POST: Suma 1 a la cantidad de edificios construidos del tipo que indico el usuario.
@@ -202,7 +203,7 @@ void utilizar_materiales(Lista_materiales *lista_materiales, int cantidad_piedra
 
 
 /*
-PRE: Recibe el string "edificio_a_construir" con el nombre del edificio que se quiere
+PRE: Recibe el string "edificio_a_construir" con un nombre valido de un edificio que se quiere
 construir y los structs "lista_materiales" y "lista_edificios" con los edificios y 
 materiales disponibles.
 
@@ -258,7 +259,7 @@ bool construido_alguna_vez(Lista_edificios *lista_edificios, int posicion_edific
 
 
 /*
-PRE: Recibe el string "nombre_edificio" con el nombre del edificio que se quiere
+PRE: Recibe el string "edificio_a_demoler" con un nombre valido de un edificio que se quiere
 demoler y los structs "lista_materiales" y "lista_edificios" con los edificios y 
 materiales disponibles.
 
@@ -267,7 +268,7 @@ y sumando la mitad de las cantidades de los materiales necesarios para
 su construccion en "lista_materiales". En caso de no ser posible, se 
 le informa al usuario la razon.
 */
-void demoler_edificio(string nombre_edificio ,Lista_edificios *lista_edificios, Lista_materiales *lista_materiales);
+void demoler_edificio(string edificio_a_demoler ,Lista_edificios *lista_edificios, Lista_materiales *lista_materiales);
 
 
 /*
@@ -275,37 +276,55 @@ PRE: Recibe el objeto de tipo osfstream "archivo_edificios" correspondiente al a
 el struct "lista_edificios" con todos los edificios y su respectiva informacion y el entero "i" que
 representa la posicion en el vector edificios del struct "lista_edificios"
 
-POST: Escribe en el archivo el edificio de indice "i" con su respectiva info
+POST: Escribe en el archivo el edificio de indice "i" con su respectivos datos.
 */
 void escribir_edificio(ofstream *archivo_edificios,Lista_edificios * lista_edificios, int i);
 
 
 /*
-PRE: Recibe el struct "lista_edificios" con los edificios disponibles
-POST: Libera el heap que utilizo la matriz de edificios dentro del struct
+PRE: Recibe el struct "lista_edificios" con los edificios disponibles.
+
+POST: Libera el heap que utilizo el vecto de edificios dentro del struct y escribe 
+el archivo "edificios.txt" con las modificaciones que se hayan realizado sobre
+el listado de edificios.
 */
 void guardar_edificios(Lista_edificios *lista_edificios);
 
 
 /*
-PRE: Recibe el struct "lista_materiales" con los materiales disponibles
+PRE: Recibe el struct "lista_materiales" con los materiales disponibles.
 
-POST: Libera el heap que utilizo la matriz de materiales dentro del struct
+POST: Libera el heap que utilizo el vector de materiales dentro del struct y escribe 
+el archivo "materiales.txt" con las modificaciones que se hayan realizado sobre
+el listado de materiales.
 */
 void guardar_materiales(Lista_materiales* lista_materiales);
+
 
 /*
 PRE: Recibe los structs "lista_materiales" con los materiales disponibles y "lista_edificios" con los
 edificios disponibles
 
-POST: Libera el heap que utilizo la matriz de materiales dentro del struct
+POST: Libera el heap que utilizaron las matrices de materiales y edificios dentro de cada struct si
+loas archivos se pudieron abrir y leer correctamente.
 */
 void guardar_archivos(Lista_materiales *lista_materiales, Lista_edificios * lista_edificios);
 
+
+/*
+PRE:-
+
+POST: Muestra por pantalla el menu de opciones.
+*/
 void mostrar_menu();
 
+/*
+PRE: Recibe el entero "opcion" con una opcion valida y los structs "lista_materiales" y "lista_edificios"
+con la lista de materiales y edifcios respectivamente.
 
-void menu_opciones(Lista_materiales *lista_materiales, Lista_edificios *lista_edificios, int opcion);
+POST: Realiza la operacion indicada.
+*/
+void procesar_opcion(Lista_materiales *lista_materiales, Lista_edificios *lista_edificios, int opcion);
 
 
 
