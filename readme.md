@@ -1,6 +1,6 @@
 # Tp Andypolis: Los cimientos
 
-## Descripciones
+## General
 
 Parte 1 de 3 del trabajo práctico "Andypolis" de la materia Algoritmos y Programación II de FIUBA.
 En esta primera etapa se escribe el código base que consiste en un menu de opciones que permite
