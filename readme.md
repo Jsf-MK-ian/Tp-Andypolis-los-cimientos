@@ -11,7 +11,7 @@ en structs. Para información mas detallada leer Andypolis los cimientos.pdf.
 
 Para la parte 2 del trabajo práctico dirirse a:
 
-[Tp-Andypolis-la-construccion](https://github.com/germandus/Tp-Andypolis-la-construccion)
+[Tp Andypolis: la construccion](https://github.com/germandus/Tp-Andypolis-la-construccion)
 
 En la misma se agrega un mapa para la colocación de edificios y materiales y se reestrcutura
 el trabajo práctico haciendo uso de objetos.
